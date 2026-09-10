@@ -48,11 +48,10 @@ matched task. Joint successes and joint failures remain coverage data, not
 relative wins. Separation is flagged and intervals are withheld; disconnected
 comparisons retain outcomes without inventing a rating.
 
-The public chart records provisional development indicators, not a calibrated
-universal scale. Its first macOS observation was AgdaProver `d2b0d7c`: 11/16
-tasks, rating 2138 against the fixed 1500 smoke reference. GitHub-hosted Linux
-measurements form a separate series. A finite smoke bank will eventually
-saturate; it is not a claim about general mathematical strength.
+The public chart records GitHub-hosted measurements as provisional development
+indicators, not a calibrated universal scale. Local measurements remain private.
+Different ranking configurations form separate series. A finite task bank will
+eventually saturate; it is not a claim about general mathematical strength.
 
 The scheduled workflow checks for new first-parent product commits twice an
 hour and measures at most two per batch. Delayed jobs catch up without silently
