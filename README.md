@@ -48,10 +48,11 @@ matched task. Joint successes and joint failures remain coverage data, not
 relative wins. Separation is flagged and intervals are withheld; disconnected
 comparisons retain outcomes without inventing a rating.
 
-The public chart records GitHub-hosted measurements as provisional development
-indicators, not a calibrated universal scale. Local measurements remain private.
-Different ranking configurations form separate series. A finite task bank will
-eventually saturate; it is not a claim about general mathematical strength.
+The public chart shows each participating prover's rating over time, followed
+by its recorded results. Dates and rating axes scale automatically as results
+arrive. New features and ranking changes remain part of the same prover's
+history. Local measurements remain private. Ratings are provisional, not a
+calibrated universal scale; a finite task bank will eventually saturate.
 
 The scheduled workflow checks for new first-parent product commits twice an
 hour and measures at most two per batch. Delayed jobs catch up without silently
@@ -67,7 +68,8 @@ The active AgdaProver campaign uses NNUE with the weights bundled in each
 measured product commit, starting at `eaabbc5`. No local training checkout or
 custom model path is needed. The frozen product snapshot records the model
 files and their hashes. Earlier symbolic-only measurements remain unchanged
-in separate chart series; they do not measure the bundled NNUE.
+in the same AgdaProver history, with their original settings preserved in the
+records; they do not measure the bundled NNUE.
 Proof execution runs offline in a read-only-permission job; a separate job
 publishes observations and refreshes Pages without executing archived code.
 
@@ -76,8 +78,10 @@ publishes observations and refreshes Pages without executing archived code.
 ```sh
 git clone --branch results --single-branch \
   https://github.com/EgbertRijke/ProverStrength.git observations
-prover-strength serve-history --history observations/history
-prover-strength export-history site --history observations/history
+prover-strength serve-history --history observations/history \
+  --participants observations/participants.json
+prover-strength export-history site --history observations/history \
+  --participants observations/participants.json
 ```
 
 Open <http://127.0.0.1:8765/> for the local chart, or host the exported static
@@ -87,6 +91,25 @@ completed commit observation; `measure-pending --help` describes the bounded
 local commit scheduler. `run` accepts arbitrary declared executable commands;
 the initial `measure-pending` controller supports Python participants with a
 `src/` layout and a frozen evaluator/reference checkout.
+
+The optional participant registry assigns campaign IDs to stable prover names:
+
+```json
+{
+  "schema_version": "prover-strength.participants.v1",
+  "participants": [
+    {"id": "my-prover", "name": "My prover", "campaigns": ["original", "updated"]}
+  ]
+}
+```
+
+Each campaign must belong to exactly one participant. With a registry, an
+unmapped observation prevents publication; without one, the recorded contestant
+ID is used as the prover's name. This display mapping never changes archived
+scores, settings or evidence checksums. Exported summaries use
+`prover-strength.chart-point.v1`, adding a `participant` object with `id` and
+`name` to the original history point. Protocol fingerprints remain audit
+metadata, not chart groupings. Archive files retain their original schema.
 
 Campaign v1 specifies `first_commit`, `evaluator_commit`, a `suite` path and
 SHA-256, `reference` and `participant` module/argument/adapter descriptions, and

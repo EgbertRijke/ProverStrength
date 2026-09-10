@@ -4,41 +4,192 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ProverStrength</title>
 <style>
-body{font:16px system-ui,sans-serif;max-width:1100px;margin:40px auto;padding:0 24px;color:#172638;background:#f7f9fc}
-h1{font-size:30px;margin-bottom:8px}p{line-height:1.5;color:#526174}select{font:inherit;padding:6px;max-width:100%}
-section{background:white;border:1px solid #dfe5ee;border-radius:12px;padding:22px;margin:20px 0}svg{width:100%;height:auto}
-table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:left;padding:12px 6px;border-bottom:1px solid #e4eaf1}
-.scroll{overflow-x:auto}small{color:#607088}a{color:#1c64c5}.error{color:#a03131}
+body{font:16px system-ui,sans-serif;max-width:1100px;margin:40px auto;padding:0 20px;color:#172638;background:#f7f9fc}
+h1{font-size:30px;margin-bottom:24px}h2{font-size:20px;margin:0 0 18px}
+section{background:white;border:1px solid #dfe5ee;border-radius:12px;padding:22px;margin:20px 0}
+svg{display:block;width:100%;height:auto}table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:12px 8px;border-bottom:1px solid #e4eaf1;font-variant-numeric:tabular-nums}
+th{color:#526174;font-weight:600}td:not(:first-child){white-space:nowrap}.scroll{overflow-x:auto}
+#legend{display:flex;flex-wrap:wrap;gap:12px 24px;list-style:none;padding:0;margin:0 0 16px}
+.swatch{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:8px}
+#status:empty{display:none}#status{color:#526174;line-height:1.5}.error{color:#a03131!important}
+@media(max-width:600px){body{margin:24px auto;padding:0 12px}section{padding:16px 10px}h1{font-size:26px}}
 </style>
 <h1>ProverStrength</h1>
-<p>Measured product commits. Provisional ratings are a development indicator, not a calibrated universal scale.</p>
-<label>Measurement series <select id="series"></select></label>
-<p id="status" role="status">Loading recorded measurements…</p>
-<section><h2>Provisional rating</h2><svg id="chart" viewBox="0 0 1000 280" role="img" aria-label="Rating by measured commit"></svg>
-<small>Each dot is a recorded measurement (simulations, if present, are separate series). Only matching protocols are connected; no scores are invented for unmeasured commits. Prior-dependent estimates are marked with an asterisk.</small></section>
-<section class="scroll"><h2>Recorded results</h2><table><thead><tr><th>Product commit</th><th>Measured</th><th>Rating</th><th>Solved</th><th>Domain solve rates</th><th>Proofs / 1k actions</th></tr></thead><tbody id="rows"></tbody></table></section>
-<p>Refreshes every 10 seconds. Public data updates after scheduled measurements finish; GitHub scheduling can be delayed. Unknown effort counters are retained in the underlying records, not treated as zero.</p>
+<p id="status" role="status">Loading results…</p>
+<section>
+  <h2>Provisional rating</h2>
+  <ul id="legend" aria-label="Participating provers"></ul>
+  <svg id="chart" viewBox="0 0 1000 320" role="img" aria-label="Prover ratings over time"></svg>
+</section>
+<section class="scroll">
+  <h2>Recorded results</h2>
+  <table>
+    <thead><tr><th>Prover</th><th>Date (UTC)</th><th>Rating</th><th>Problems solved</th><th>Proofs per 1,000 actions</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+</section>
 <script>
-const pick=document.querySelector('#series'), status=document.querySelector('#status');let all=[];
-const percent=x=>x===undefined?'—':(100*x).toFixed(1)+'%';
-function draw(){
- const entries=all.filter(p=>p.series_id===pick.value), rows=document.querySelector('#rows'), svg=document.querySelector('#chart');rows.replaceChildren();svg.replaceChildren();
- if(!entries.length)return;
- const ns='http://www.w3.org/2000/svg', el=(tag,attrs,text)=>{let n=document.createElementNS(ns,tag);for(let k in attrs)n.setAttribute(k,attrs[k]);if(text!==undefined)n.textContent=text;svg.append(n);return n;};
- const values=entries.map(p=>p.provisional_rating).filter(Number.isFinite), low=Math.floor((Math.min(...(values.length?values:[1500]))-100)/100)*100, high=Math.ceil((Math.max(...(values.length?values:[1500]))+100)/100)*100;
- const x=i=>entries.length===1?520:75+i*850/(entries.length-1),y=v=>225-(v-low)*190/(high-low);
- for(let j=0;j<=4;j++){const v=low+(high-low)*j/4;el('line',{x1:65,x2:950,y1:y(v),y2:y(v),stroke:'#e4eaf1'});el('text',{x:12,y:y(v)+5,fill:'#607088','font-size':13},Math.round(v));}
- el('polyline',{points:entries.flatMap((p,i)=>Number.isFinite(p.provisional_rating)?[`${x(i)},${y(p.provisional_rating)}`]:[]).join(' '),fill:'none',stroke:'#1c64c5','stroke-width':2});
- entries.forEach((p,i)=>{
-  if(Number.isFinite(p.provisional_rating)){const dot=el('circle',{cx:x(i),cy:y(p.provisional_rating),r:5,fill:'#1c64c5'});const title=document.createElementNS(ns,'title');title.textContent=`${p.product_commit.slice(0,7)}: ${p.provisional_rating}; ${p.solved}/${p.total} solved`;dot.append(title);}
-  if(entries.length<=12)el('text',{x:x(i),y:253,'text-anchor':'middle',fill:'#526174','font-size':12},p.product_commit.slice(0,7));
-  const tr=document.createElement('tr');
-  const cells=[p.product_commit.slice(0,7),p.measured_at.replace('T',' ').slice(0,19)+' UTC',Number.isFinite(p.provisional_rating)?Math.round(p.provisional_rating)+(p.prior_dependent?'*':''):'Not identifiable',`${p.solved}/${p.total} (${percent(p.balanced_solve_rate)})`,Object.entries(p.solve_rate_by_domain).map(([d,v])=>`${d}: ${percent(v)}`).join(' · '),p.effort.proofs_per_1000_actions===null?'Unknown':p.effort.proofs_per_1000_actions.toFixed(1)];
-  cells.forEach(text=>{const td=document.createElement('td');td.textContent=text;tr.append(td);});rows.prepend(tr);
- });
- status.textContent=`${entries[0].series.target_command.adapter||'participant'} · ${entries.length} recorded measurement${entries.length===1?'':'s'} · ${entries[0].series.protocol.budget_seconds} seconds/task · ${entries[0].series.profile.ranker||'declared'} ranking · ${entries[0].series.profile.search||'declared'} search · ${entries[0].status}`;
+const status = document.querySelector('#status');
+const svg = document.querySelector('#chart');
+const colors = ['#1c64c5', '#b34d17', '#008569', '#8250b5', '#b72d69', '#596700'];
+const day = 86400000;
+let all = [];
+
+function niceStep(value) {
+  const power = 10 ** Math.floor(Math.log10(value));
+  return [1, 2, 5, 10].find(n => n * power >= value) * power;
 }
-async function refresh(){try{const response=await fetch('history.json',{cache:'no-store'});if(!response.ok)throw new Error('History unavailable');all=await response.json();const selected=pick.value;pick.replaceChildren();[...new Set(all.map(p=>p.series_id))].forEach(id=>{const o=document.createElement('option');o.value=id;const p=all.find(p=>p.series_id===id);o.textContent=`${p.series.environment.id} · ${p.series.profile.ranker||'declared profile'} · ${id.slice(0,8)}`;pick.append(o);});if(all.length)pick.value=all.some(p=>p.series_id===selected)?selected:all[all.length-1].series_id;if(!all.length)status.textContent='No measurements recorded yet.';else draw();status.className='';}catch(e){status.textContent='Could not refresh history; existing measurements are unchanged.';status.className='error';}}
-pick.addEventListener('change',draw);refresh();setInterval(refresh,10000);
+
+function ratingScale(values) {
+  let low = 1500, high = 1500;
+  if (values.length) {
+    low = values.reduce((a, b) => Math.min(a, b));
+    high = values.reduce((a, b) => Math.max(a, b));
+  }
+  const padding = high === low ? Math.max(50, Math.abs(low) * 0.05) : (high - low) * 0.1;
+  const step = niceStep((high - low + 2 * padding) / 4);
+  low = Math.floor((low - padding) / step) * step;
+  high = Math.ceil((high + padding) / step) * step;
+  const ticks = Array.from({length: Math.round((high - low) / step) + 1}, (_, i) => low + i * step);
+  const digits = Math.min(20, Math.max(0, -Math.floor(Math.log10(step))));
+  const magnitude = Math.max(Math.abs(low), Math.abs(high));
+  const compact = magnitude >= 1000000 && step >= magnitude / 100;
+  const format = new Intl.NumberFormat('en', {maximumFractionDigits: compact ? 2 : digits, notation: compact ? 'compact' : 'standard'});
+  return {low, high, ticks, format: n => format.format(n)};
+}
+
+function timeScale(times, limit) {
+  const first = times[0], last = times[times.length - 1];
+  if (first === last) return {low: first - day / 2, high: last + day / 2, ticks: [first], span: day, tickStep: day};
+  const span = last - first;
+  const target = span / (limit - 1);
+  const steps = [1000, 5000, 15000, 30000, 60000, 300000, 900000, 1800000,
+    3600000, 10800000, 21600000, 43200000, day, 2 * day, 7 * day, 14 * day];
+  const step = steps.find(n => n >= target);
+  const ticks = [];
+  if (step) {
+    for (let t = Math.ceil(first / step) * step; t <= last; t += step) ticks.push(t);
+  } else {
+    const months = target / (30.4375 * day);
+    const stride = months <= 1 ? 1 : months <= 3 ? 3 : months <= 6 ? 6 : 12 * niceStep(months / 12);
+    const start = new Date(first);
+    let index = start.getUTCFullYear() * 12 + start.getUTCMonth();
+    index = Math.ceil(index / stride) * stride;
+    for (;;) {
+      const t = Date.UTC(Math.floor(index / 12), index % 12, 1);
+      if (t > last) break;
+      if (t >= first) ticks.push(t);
+      index += stride;
+    }
+  }
+  if (!ticks.length) ticks.push(first, last);
+  return {low: first, high: last, ticks, span, tickStep: step || 30 * day};
+}
+
+function timeLabel(time, span, tickStep) {
+  const date = new Date(time);
+  const options = {timeZone: 'UTC', month: 'short', day: 'numeric'};
+  if (span >= 90 * day) options.year = 'numeric';
+  const parts = [new Intl.DateTimeFormat('en', options).format(date)];
+  if (tickStep < day) {
+    const clock = {timeZone: 'UTC', hour: '2-digit', minute: '2-digit', hour12: false};
+    if (tickStep < 60000) clock.second = '2-digit';
+    parts.push(new Intl.DateTimeFormat('en', clock).format(date));
+  }
+  return parts;
+}
+
+function draw() {
+  const rows = document.querySelector('#rows'), legend = document.querySelector('#legend');
+  rows.replaceChildren(); legend.replaceChildren(); svg.replaceChildren();
+  if (!all.length) {status.textContent = 'No results yet.'; return;}
+  const participants = new Map();
+  for (const point of all) {
+    const id = point.participant.id;
+    if (!participants.has(id)) participants.set(id, {name: point.participant.name, entries: []});
+    participants.get(id).entries.push(point);
+  }
+  const width = Math.max(300, svg.getBoundingClientRect().width || 1000), height = 320;
+  svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+  const left = 72, right = width - 24, top = 18, bottom = 250;
+  const time = timeScale(all.map(p => Date.parse(p.measured_at)), Math.max(2, Math.min(7, Math.floor((right - left) / 105))));
+  const rating = ratingScale(all.map(p => p.provisional_rating).filter(Number.isFinite));
+  const x = t => left + (t - time.low) * (right - left) / (time.high - time.low);
+  const y = v => bottom - (v - rating.low) * (bottom - top) / (rating.high - rating.low);
+  const ns = 'http://www.w3.org/2000/svg';
+  const element = (tag, attrs, text, parent = svg) => {
+    const node = document.createElementNS(ns, tag);
+    for (const key in attrs) node.setAttribute(key, attrs[key]);
+    if (text !== undefined) node.textContent = text;
+    parent.append(node); return node;
+  };
+  for (const v of rating.ticks) {
+    element('line', {x1: left, x2: right, y1: y(v), y2: y(v), stroke: '#e4eaf1'});
+    element('text', {x: left - 12, y: y(v) + 4, 'text-anchor': 'end', fill: '#607088', 'font-size': 12}, rating.format(v));
+  }
+  for (const t of time.ticks) {
+    element('line', {x1: x(t), x2: x(t), y1: bottom, y2: bottom + 5, stroke: '#a3afbf'});
+    timeLabel(t, time.span, time.tickStep).forEach((label, i) => element('text', {
+      x: x(t), y: bottom + 23 + i * 16,
+      'text-anchor': x(t) < left + 40 ? 'start' : x(t) > right - 40 ? 'end' : 'middle',
+      fill: '#607088', 'font-size': 12
+    }, label));
+  }
+  element('text', {x: (left + right) / 2, y: 313, 'text-anchor': 'middle', fill: '#607088', 'font-size': 12}, 'Date (UTC)');
+  let index = 0;
+  for (const participant of participants.values()) {
+    const color = colors[index++ % colors.length];
+    const item = document.createElement('li'), swatch = document.createElement('span');
+    swatch.className = 'swatch'; swatch.style.backgroundColor = color; swatch.setAttribute('aria-hidden', 'true');
+    item.append(swatch, document.createTextNode(participant.name)); legend.append(item);
+    let segment = [];
+    const flush = () => {
+      if (segment.length > 1) element('polyline', {points: segment.join(' '), fill: 'none', stroke: color, 'stroke-width': 2});
+      segment = [];
+    };
+    for (const p of participant.entries) {
+      if (!Number.isFinite(p.provisional_rating)) {flush(); continue;}
+      const cx = x(Date.parse(p.measured_at)), cy = y(p.provisional_rating);
+      segment.push(`${cx},${cy}`);
+    }
+    flush();
+    for (const p of participant.entries) {
+      if (!Number.isFinite(p.provisional_rating)) continue;
+      const dot = element('circle', {cx: x(Date.parse(p.measured_at)), cy: y(p.provisional_rating), r: 5, fill: color});
+      element('title', {}, `${participant.name} · ${p.measured_at.replace('T', ' ')} · Rating ${Math.round(p.provisional_rating)} · ${p.solved}/${p.total} solved${p.status === 'simulated' ? ' (simulated)' : ''}`, dot);
+    }
+  }
+  for (const p of [...all].reverse()) {
+    const row = document.createElement('tr');
+    const effort = p.effort.proofs_per_1000_actions;
+    const cells = [p.participant.name, p.measured_at.replace('T', ' ').slice(0, 16),
+      Number.isFinite(p.provisional_rating) ? Math.round(p.provisional_rating).toLocaleString('en') : 'Not available',
+      `${p.solved} / ${p.total}${p.status === 'simulated' ? ' (simulated)' : ''}`,
+      Number.isFinite(effort) ? effort.toFixed(1) : 'Unknown'];
+    for (const text of cells) {const cell = document.createElement('td'); cell.textContent = text; row.append(cell);}
+    rows.append(row);
+  }
+  status.textContent = '';
+}
+
+async function refresh() {
+  try {
+    const response = await fetch('history.json', {cache: 'no-store'});
+    if (!response.ok) throw new Error('History unavailable');
+    const data = await response.json();
+    if (!Array.isArray(data) || data.some(p => p.schema_version !== 'prover-strength.chart-point.v1' ||
+      typeof p.participant?.id !== 'string' || typeof p.participant?.name !== 'string' || !Number.isFinite(Date.parse(p.measured_at)))) {
+      throw new Error('Invalid chart data');
+    }
+    all = data.sort((a, b) => Date.parse(a.measured_at) - Date.parse(b.measured_at) || a.id.localeCompare(b.id));
+    draw(); status.className = '';
+  } catch {
+    status.textContent = 'Could not refresh results. Please try again later.';
+    status.className = 'error';
+  }
+}
+new ResizeObserver(() => draw()).observe(svg);
+refresh(); setInterval(refresh, 10000);
 </script>
 </html>

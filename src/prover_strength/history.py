@@ -219,7 +219,91 @@ def points(history: Path) -> list[dict[str, Any]]:
     )
 
 
-def export(history: Path, destination: Path) -> None:
+def participant_registry(path: Path) -> dict[str, dict[str, str]]:
+    """Map campaigns to stable public participants, never infer from settings."""
+    value = read_json(path)
+    if (
+        not isinstance(value, dict)
+        or value.get("schema_version") != "prover-strength.participants.v1"
+        or not isinstance(value.get("participants"), list)
+    ):
+        raise ValueError("unsupported participant registry")
+    campaigns: dict[str, dict[str, str]] = {}
+    identities: set[str] = set()
+    for participant in value["participants"]:
+        if not isinstance(participant, dict) or any(
+            not isinstance(participant.get(key), str) or not participant[key].strip()
+            for key in ("id", "name")
+        ):
+            raise ValueError("participant requires a nonempty id and name")
+        if participant["id"] in identities:
+            raise ValueError("duplicate participant id")
+        identities.add(participant["id"])
+        assigned = participant.get("campaigns")
+        if not isinstance(assigned, list) or not assigned:
+            raise ValueError("participant requires campaign identities")
+        for campaign in assigned:
+            if not isinstance(campaign, str) or not campaign.strip():
+                raise ValueError("invalid participant campaign identity")
+            if campaign in campaigns:
+                raise ValueError("campaign belongs to more than one participant")
+            campaigns[campaign] = {
+                "id": participant["id"],
+                "name": participant["name"],
+            }
+    return campaigns
+
+
+def chart_points(
+    history: Path, participants: Path | None = None
+) -> list[dict[str, Any]]:
+    """Project immutable observations into participant histories for display.
+
+    Protocol fingerprints remain audit metadata, not public participant identity.
+    Without a registry, use the recorded contestant id unchanged.
+    """
+    registry = participant_registry(participants) if participants is not None else None
+    data = []
+    for path in history.glob("*/point.json"):
+        if path.parent.name.startswith("."):
+            continue
+        point = read_json(path)
+        if point.get("schema_version") != "prover-strength.history-point.v1":
+            raise ValueError("unsupported archived history point")
+        if registry is not None:
+            metadata = read_json(path.with_name("observation.json"))
+            campaign_metadata = metadata.get("campaign")
+            campaign = (
+                campaign_metadata.get("id")
+                if isinstance(campaign_metadata, dict)
+                else None
+            )
+            if not isinstance(campaign, str) or campaign not in registry:
+                raise ValueError(
+                    "observation campaign is absent from participant registry"
+                )
+            participant = registry[campaign]
+        else:
+            result = read_json(path.with_name("results.json"))
+            matches = [
+                p for p in result["provers"] if p["revision"] == point["product_commit"]
+            ]
+            if len(matches) != 1:
+                raise ValueError("observation requires one matching participant")
+            participant = {"id": matches[0]["id"], "name": matches[0]["id"]}
+        data.append(
+            point
+            | {
+                "schema_version": "prover-strength.chart-point.v1",
+                "participant": participant,
+            }
+        )
+    return sorted(data, key=lambda p: (p["measured_at"], p["id"]))
+
+
+def export(
+    history: Path, destination: Path, *, participants: Path | None = None
+) -> None:
     """Export summaries, never execute or serve archived participant artifacts."""
     if not history.is_dir():
         raise ValueError("history directory does not exist")
@@ -236,7 +320,7 @@ def export(history: Path, destination: Path) -> None:
                     raise ValueError("archive manifest escapes its observation")
                 if file_sha256(str(path)) != expected:
                     raise ValueError("modified archived evidence")
-    data = points(history)
+    data = chart_points(history, participants)
     destination.mkdir(parents=True, exist_ok=False)
     shutil.copyfile(
         Path(__file__).with_name("history.html"), destination / "index.html"
@@ -246,16 +330,26 @@ def export(history: Path, destination: Path) -> None:
     )
 
 
-def serve(history: Path, port: int = 8765) -> None:
+def serve(history: Path, port: int = 8765, *, participants: Path | None = None) -> None:
     """Serve only the chart and summaries on loopback, never raw worker files."""
     page = Path(__file__).with_name("history.html").read_bytes()
+    # Fail before listening on invalid configuration.
+    chart_points(history, participants)
 
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self) -> None:
             if self.path == "/":
                 body, content_type = page, "text/html; charset=utf-8"
             elif self.path == "/history.json":
-                body = json.dumps(points(history), ensure_ascii=False).encode()
+                try:
+                    body = json.dumps(
+                        chart_points(history, participants),
+                        ensure_ascii=False,
+                        allow_nan=False,
+                    ).encode()
+                except (ValueError, TypeError, KeyError, OSError):
+                    self.send_error(503, "History unavailable")
+                    return
                 content_type = "application/json; charset=utf-8"
             else:
                 self.send_error(404)

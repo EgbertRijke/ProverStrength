@@ -132,9 +132,11 @@ def main(argv: list[str] | None = None) -> int:
     )
     chart.add_argument("--history", type=Path, default=Path("history"))
     chart.add_argument("--port", type=int, default=8765)
+    chart.add_argument("--participants", type=Path, help="stable participant registry")
     static = commands.add_parser("export-history", help="export a static public chart")
     static.add_argument("destination", type=Path)
     static.add_argument("--history", type=Path, required=True)
+    static.add_argument("--participants", type=Path, help="stable participant registry")
     pending = commands.add_parser(
         "measure-pending", help="measure a bounded batch of new commits"
     )
@@ -172,7 +174,7 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "export-history":
             from .history import export
 
-            export(args.history, args.destination)
+            export(args.history, args.destination, participants=args.participants)
         elif args.command == "record":
             from .history import record
 
@@ -180,7 +182,7 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "serve-history":
             from .history import serve
 
-            serve(args.history, args.port)
+            serve(args.history, args.port, participants=args.participants)
         elif args.command == "rate":
             data = merge(
                 [json.loads(p.read_text(encoding="utf-8")) for p in args.results]
