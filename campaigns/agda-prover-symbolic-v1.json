@@ -1,15 +1,14 @@
 {
   "schema_version": "prover-strength.campaign.v1",
-  "id": "agda-prover-public-nnue-v1",
-  "first_commit": "eaabbc5a0ba80ef7254833ab84375fcfb5c5daaf",
+  "id": "agda-prover-public-smoke-v1",
+  "first_commit": "d2b0d7c488b5a478fb5cc464509345b6c74c9b01",
   "evaluator_commit": "25024ccf30f77fd661e78abe1689564b937bd9f2",
   "suite": {
     "path": "examples/smoke-suite.json",
     "sha256": "bf2d9f0f93b7a16633a8a3a344d059393f31dcdff52f9d63739f8951227bd878"
   },
   "profile": {
-    "ranker": "nnue", "search": "deep", "model": null, "action_model": null,
-    "or_model": null, "model_selection": "bundled-per-product-commit",
+    "ranker": "symbolic", "search": "deep", "model": null, "action_model": null,
     "budget_seconds": 10, "max_candidates": 8000,
     "seeds": [0], "order_seed": 0,
     "max_output_bytes": 16777216, "reference_check_budget_seconds": 60
@@ -20,8 +19,8 @@
     "arguments": ["baseline", "{source}", "--agda", "{agda}", "--budget", "{budget}"]
   },
   "participant": {
-    "id": "AgdaProver-nnue-deep", "adapter": "agdaprover",
+    "id": "AgdaProver-symbolic-deep", "adapter": "agdaprover",
     "module": "agdaprover.cli",
-    "arguments": ["prove-prefix", "{source}", "--agda", "{agda}", "--deep", "--ranker", "nnue", "--timeout", "{budget}"]
+    "arguments": ["prove-prefix", "{source}", "--agda", "{agda}", "--deep", "--ranker", "symbolic", "--timeout", "{budget}"]
   }
 }
