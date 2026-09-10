@@ -1,0 +1,13 @@
+{
+  "schema_version": "prover-strength.participants.v1",
+  "participants": [
+    {
+      "id": "agda-prover",
+      "name": "AgdaProver",
+      "campaigns": [
+        "agda-prover-public-smoke-v1",
+        "agda-prover-public-nnue-v1"
+      ]
+    }
+  ]
+}
