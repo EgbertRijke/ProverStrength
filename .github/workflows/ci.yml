@@ -1,18 +1,21 @@
-name: Tests
+name: Product checks
 on: [push, pull_request]
 permissions:
   contents: read
 jobs:
-  unit:
-    runs-on: ubuntu-latest
+  package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: '3.11'
       - run: python -m pip install . ruff mypy
-      - run: ruff check src tests
-      - run: ruff format --check src tests
+      - run: ruff check src
+      - run: ruff format --check src
       - run: mypy src
-      - run: python -W error::ResourceWarning -m unittest discover -s tests -v
-# Real Agda/prover measurements are explicit local jobs; ordinary CI builds no Agda.
+      - run: cd /tmp && prover-strength --help
+# Feature and checker tests live in agda-prover-dev/prover-strength-dev/.

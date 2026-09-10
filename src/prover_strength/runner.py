@@ -19,9 +19,9 @@ from pathlib import Path
 from typing import Any
 
 from .adapters import agdaprover_candidate
-from .benchmark import HEADER, suite_metadata
 from .data import SCHEMA, digest, identifier, positive, validate
 from .process import MAX_OUTPUT, HarnessError, OutputLimitError, process
+from .tasks import HEADER, suite_metadata
 
 FORBIDDEN = re.compile(r"\b(import|postulate|primitive|unquoteDecl|unquoteDef)\b|\{-#")
 CHECK_FLAGS = [
@@ -363,24 +363,3 @@ def run(
     }
     validate(result)
     return result
-
-
-def baseline(source_file: Path, agda: str, budget: float) -> dict[str, Any]:
-    """Version 1: a fixed, untrained list of ordinary lambda introduction terms.
-
-    This deliberately weak reference is useful for smoke tests. Register an
-    immutable, more capable baseline before establishing a public scale.
-    """
-    started = time.monotonic()
-    source = source_file.read_text(encoding="utf-8")
-    for term in ("λ x → x", "λ f g x → g (f x)", "λ f y x → f x y", "λ f x → f x x"):
-        candidate = source.replace("{!!}", term)
-        try:
-            accepted, _ = check_source(
-                candidate, agda, budget - (time.monotonic() - started)
-            )
-        except TimeoutError:
-            break
-        if accepted:
-            return {"candidate": candidate}
-    return {"candidate": None}

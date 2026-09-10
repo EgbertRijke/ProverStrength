@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import shutil
 import tempfile
-from collections import Counter
+from collections import Counter, defaultdict
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
@@ -85,7 +85,27 @@ def observation(run: Path) -> dict[str, Any]:
         raise ValueError("commit observation requires one matching product contestant")
     contestant = matches[0]
     rows = [r for r in result["results"] if r["prover"] == contestant["id"]]
-    rating = next(r for r in report["ratings"] if r["prover"] == contestant["id"])
+    if report.get("schema_version") == "prover-strength.unidentified-rating.v1":
+        # Absence of discordance is not absence of completed proof attempts.
+        families: dict[str, dict[str, list[bool]]] = defaultdict(
+            lambda: defaultdict(list)
+        )
+        tasks = {t["id"]: t for t in result["tasks"]}
+        for row in rows:
+            task = tasks[row["task"]]
+            families[task["domain"]][task["family"]].append(row["status"] == "verified")
+        domains = {
+            d: sum(sum(v) / len(v) for v in fs.values()) / len(fs)
+            for d, fs in families.items()
+        }
+        rating = {
+            "rating": None,
+            "interval95": None,
+            "solve_rate_by_domain": domains,
+            "balanced_solve_rate": sum(domains.values()) / len(domains),
+        }
+    else:
+        rating = next(r for r in report["ratings"] if r["prover"] == contestant["id"])
 
     # Physical snapshot paths are not experiment settings. Keep all other
     # command text, executable hashes and frozen reference revisions intact.
@@ -196,6 +216,33 @@ def points(history: Path) -> list[dict[str, Any]]:
             if not p.parent.name.startswith(".")
         ),
         key=lambda p: (p["measured_at"], p["id"]),
+    )
+
+
+def export(history: Path, destination: Path) -> None:
+    """Export summaries, never execute or serve archived participant artifacts."""
+    if not history.is_dir():
+        raise ValueError("history directory does not exist")
+    for entry in history.iterdir():
+        if entry.is_symlink():
+            raise ValueError("history does not admit symbolic links")
+        if entry.is_dir() and not entry.name.startswith("."):
+            for name, expected in read_json(entry / "files.json").items():
+                path = entry / name
+                if (
+                    not path.resolve().is_relative_to(entry.resolve())
+                    or path.is_symlink()
+                ):
+                    raise ValueError("archive manifest escapes its observation")
+                if file_sha256(str(path)) != expected:
+                    raise ValueError("modified archived evidence")
+    data = points(history)
+    destination.mkdir(parents=True, exist_ok=False)
+    shutil.copyfile(
+        Path(__file__).with_name("history.html"), destination / "index.html"
+    )
+    (destination / "history.json").write_text(
+        json.dumps(data, ensure_ascii=False, allow_nan=False) + "\n", encoding="utf-8"
     )
 
 

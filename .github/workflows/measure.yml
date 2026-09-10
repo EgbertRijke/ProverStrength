@@ -1,0 +1,122 @@
+name: Measure product commits
+on:
+  schedule:
+    - cron: '17,47 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: strength-measurements
+  cancel-in-progress: false
+jobs:
+  evaluate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          path: controller
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: EgbertRijke/agda-prover
+          ref: main
+          path: participant
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: results
+          path: published
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.11'
+      - uses: EgbertRijke/agda-prover/.github/actions/setup-agda@d2b0d7c488b5a478fb5cc464509345b6c74c9b01
+      - name: Measure at most two pending commits offline
+        env:
+          PYTHONPATH: ${{ github.workspace }}/controller/src
+        run: |
+          mkdir -p queue
+          if test -d published/queue; then cp -R published/queue/. queue/; fi
+          # Network namespace applies to evaluator, participants, and all descendants.
+          # The frozen source/profile and sanitized worker environment are recorded.
+          sudo unshare --net -- runuser -u runner -- env \
+            PATH="$PATH" PYTHONPATH="$PYTHONPATH" HOME="$HOME" \
+            python -B -m prover_strength measure-pending published/campaigns/agda-prover.json \
+            --product participant --evaluator controller --queue queue \
+            --history published/history --tip HEAD --limit 2 --agda "$(command -v agda)" \
+            --environment-id github-ubuntu2404-x64-python311-v1 \
+            --network-policy linux-network-namespace-offline \
+            --output batch.json
+      - name: Package observations and queue receipts, not source snapshots
+        if: always()
+        run: |
+          mkdir -p transfer
+          if test -d published/history; then cp -R published/history transfer/history; fi
+          if test -d queue; then
+            find queue -mindepth 2 -maxdepth 2 -type f -name '*.json' -exec cp --parents '{}' transfer/ \;
+          fi
+          if test -f batch.json; then cp batch.json transfer/batch.json; fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: observations
+          path: transfer/
+          retention-days: 7
+          if-no-files-found: error
+  publish:
+    if: always() && !cancelled()
+    needs: evaluate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      # Fresh runner: no contestant code runs in this credentialed job.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          path: controller
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: results
+          path: published
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: observations
+          path: incoming
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.11'
+      - name: Validate and append evidence
+        run: |
+          PYTHONPATH=controller/src python -m prover_strength export-history checked --history incoming/history
+          for entry in incoming/history/*/; do
+            name="$(basename "$entry")"
+            if test -d "published/history/$name"; then
+              diff -rq "$entry" "published/history/$name"
+            else
+              cp -R "$entry" "published/history/$name"
+            fi
+          done
+          if test -d incoming/queue; then mkdir -p published/queue; cp -R incoming/queue/. published/queue/; fi
+          if test -f incoming/batch.json; then cp incoming/batch.json published/latest-batch.json; fi
+      - name: Publish recorded measurements
+        working-directory: published
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add history
+          if test -d queue; then git add queue; fi
+          if test -f latest-batch.json; then git add latest-batch.json; fi
+          if ! git diff --cached --quiet; then
+            git commit -m 'Record measured product commits and evaluation status'
+            git push origin HEAD:results
+          fi
+      - name: Refresh the public chart
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --repo "$GITHUB_REPOSITORY" --ref main

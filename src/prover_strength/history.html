@@ -2,7 +2,7 @@
 <html lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AgdaProver strength history</title>
+<title>ProverStrength</title>
 <style>
 body{font:16px system-ui,sans-serif;max-width:1100px;margin:40px auto;padding:0 24px;color:#172638;background:#f7f9fc}
 h1{font-size:30px;margin-bottom:8px}p{line-height:1.5;color:#526174}select{font:inherit;padding:6px;max-width:100%}
@@ -10,14 +10,14 @@ section{background:white;border:1px solid #dfe5ee;border-radius:12px;padding:22p
 table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:left;padding:12px 6px;border-bottom:1px solid #e4eaf1}
 .scroll{overflow-x:auto}small{color:#607088}a{color:#1c64c5}.error{color:#a03131}
 </style>
-<h1>AgdaProver strength history</h1>
+<h1>ProverStrength</h1>
 <p>Measured product commits. Provisional smoke ratings are a development indicator, not a calibrated universal scale.</p>
 <label>Measurement series <select id="series"></select></label>
 <p id="status" role="status">Loading recorded measurements…</p>
 <section><h2>Provisional smoke rating</h2><svg id="chart" viewBox="0 0 1000 280" role="img" aria-label="Rating by measured commit"></svg>
-<small>Each dot is a real measurement. Only matching protocols are connected; no scores are invented for unmeasured commits. Prior-dependent estimates are marked with an asterisk.</small></section>
-<section class="scroll"><h2>Recorded results</h2><table><thead><tr><th>Product commit</th><th>Measured</th><th>Rating</th><th>Solved</th><th>Logic</th><th>Equality</th><th>Induction</th><th>Dependent</th></tr></thead><tbody id="rows"></tbody></table></section>
-<p>Refreshes every 10 seconds. New archived observations appear automatically. Unknown effort counters are retained in the underlying records, not treated as zero.</p>
+<small>Each dot is a recorded measurement (simulations, if present, are separate series). Only matching protocols are connected; no scores are invented for unmeasured commits. Prior-dependent estimates are marked with an asterisk.</small></section>
+<section class="scroll"><h2>Recorded results</h2><table><thead><tr><th>Product commit</th><th>Measured</th><th>Rating</th><th>Solved</th><th>Domain solve rates</th><th>Proofs / 1k actions</th></tr></thead><tbody id="rows"></tbody></table></section>
+<p>Refreshes every 10 seconds. Public data updates after scheduled measurements finish; GitHub scheduling can be delayed. Unknown effort counters are retained in the underlying records, not treated as zero.</p>
 <script>
 const pick=document.querySelector('#series'), status=document.querySelector('#status');let all=[];
 const percent=x=>x===undefined?'—':(100*x).toFixed(1)+'%';
@@ -25,20 +25,20 @@ function draw(){
  const entries=all.filter(p=>p.series_id===pick.value), rows=document.querySelector('#rows'), svg=document.querySelector('#chart');rows.replaceChildren();svg.replaceChildren();
  if(!entries.length)return;
  const ns='http://www.w3.org/2000/svg', el=(tag,attrs,text)=>{let n=document.createElementNS(ns,tag);for(let k in attrs)n.setAttribute(k,attrs[k]);if(text!==undefined)n.textContent=text;svg.append(n);return n;};
- const values=entries.map(p=>p.provisional_rating), low=Math.floor((Math.min(...values)-100)/100)*100, high=Math.ceil((Math.max(...values)+100)/100)*100;
+ const values=entries.map(p=>p.provisional_rating).filter(Number.isFinite), low=Math.floor((Math.min(...(values.length?values:[1500]))-100)/100)*100, high=Math.ceil((Math.max(...(values.length?values:[1500]))+100)/100)*100;
  const x=i=>entries.length===1?520:75+i*850/(entries.length-1),y=v=>225-(v-low)*190/(high-low);
  for(let j=0;j<=4;j++){const v=low+(high-low)*j/4;el('line',{x1:65,x2:950,y1:y(v),y2:y(v),stroke:'#e4eaf1'});el('text',{x:12,y:y(v)+5,fill:'#607088','font-size':13},Math.round(v));}
- el('polyline',{points:entries.map((p,i)=>`${x(i)},${y(p.provisional_rating)}`).join(' '),fill:'none',stroke:'#1c64c5','stroke-width':2});
+ el('polyline',{points:entries.flatMap((p,i)=>Number.isFinite(p.provisional_rating)?[`${x(i)},${y(p.provisional_rating)}`]:[]).join(' '),fill:'none',stroke:'#1c64c5','stroke-width':2});
  entries.forEach((p,i)=>{
-  const dot=el('circle',{cx:x(i),cy:y(p.provisional_rating),r:5,fill:'#1c64c5'});const title=document.createElementNS(ns,'title');title.textContent=`${p.product_commit.slice(0,7)}: ${p.provisional_rating}; ${p.solved}/${p.total} solved`;dot.append(title);
+  if(Number.isFinite(p.provisional_rating)){const dot=el('circle',{cx:x(i),cy:y(p.provisional_rating),r:5,fill:'#1c64c5'});const title=document.createElementNS(ns,'title');title.textContent=`${p.product_commit.slice(0,7)}: ${p.provisional_rating}; ${p.solved}/${p.total} solved`;dot.append(title);}
   if(entries.length<=12)el('text',{x:x(i),y:253,'text-anchor':'middle',fill:'#526174','font-size':12},p.product_commit.slice(0,7));
   const tr=document.createElement('tr');
-  const cells=[p.product_commit.slice(0,7),p.measured_at.replace('T',' ').slice(0,19)+' UTC',Math.round(p.provisional_rating)+(p.prior_dependent?'*':''),`${p.solved}/${p.total} (${percent(p.balanced_solve_rate)})`,...['logic','equality','induction','dependent'].map(d=>percent(p.solve_rate_by_domain[d]))];
-  cells.forEach((text,k)=>{const td=document.createElement('td');if(k===0){const a=document.createElement('a');a.href='https://github.com/EgbertRijke/agda-prover/commit/'+encodeURIComponent(p.product_commit);a.textContent=text;td.append(a);}else td.textContent=text;tr.append(td);});rows.prepend(tr);
+  const cells=[p.product_commit.slice(0,7),p.measured_at.replace('T',' ').slice(0,19)+' UTC',Number.isFinite(p.provisional_rating)?Math.round(p.provisional_rating)+(p.prior_dependent?'*':''):'Not identifiable',`${p.solved}/${p.total} (${percent(p.balanced_solve_rate)})`,Object.entries(p.solve_rate_by_domain).map(([d,v])=>`${d}: ${percent(v)}`).join(' · '),p.effort.proofs_per_1000_actions===null?'Unknown':p.effort.proofs_per_1000_actions.toFixed(1)];
+  cells.forEach(text=>{const td=document.createElement('td');td.textContent=text;tr.append(td);});rows.prepend(tr);
  });
- status.textContent=`${entries.length} recorded measurement${entries.length===1?'':'s'} · ${entries[0].series.protocol.budget_seconds} seconds/task · ${entries[0].series.profile.ranker} ranking · ${entries[0].series.profile.search} search`;
+ status.textContent=`${entries.length} recorded measurement${entries.length===1?'':'s'} · ${entries[0].series.protocol.budget_seconds} seconds/task · ${entries[0].series.profile.ranker||'declared'} ranking · ${entries[0].series.profile.search||'declared'} search · ${entries[0].status}`;
 }
-async function refresh(){try{const response=await fetch('/history.json',{cache:'no-store'});if(!response.ok)throw new Error('History unavailable');all=await response.json();const selected=pick.value;pick.replaceChildren();[...new Set(all.map(p=>p.series_id))].forEach(id=>{const o=document.createElement('option');o.value=id;o.textContent=id.slice(0,12);pick.append(o);});if(all.some(p=>p.series_id===selected))pick.value=selected;if(!all.length)status.textContent='No measurements recorded yet.';else draw();status.className='';}catch(e){status.textContent='Could not refresh history; existing measurements are unchanged.';status.className='error';}}
+async function refresh(){try{const response=await fetch('history.json',{cache:'no-store'});if(!response.ok)throw new Error('History unavailable');all=await response.json();const selected=pick.value;pick.replaceChildren();[...new Set(all.map(p=>p.series_id))].forEach(id=>{const o=document.createElement('option');o.value=id;const p=all.find(p=>p.series_id===id);o.textContent=`${p.series.environment.id} · ${p.series.profile.ranker||'declared profile'} · ${id.slice(0,8)}`;pick.append(o);});if(all.some(p=>p.series_id===selected))pick.value=selected;if(!all.length)status.textContent='No measurements recorded yet.';else draw();status.className='';}catch(e){status.textContent='Could not refresh history; existing measurements are unchanged.';status.className='error';}}
 pick.addEventListener('change',draw);refresh();setInterval(refresh,10000);
 </script>
 </html>

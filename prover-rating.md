@@ -204,12 +204,8 @@ family-balanced relative scale and explicit uncertainty to that general pattern.
 Install this standalone checkout with `python3 -m pip install .`.
 
 ```sh
-# Statistical demonstration; no Agda required, and every result is simulated.
-agda-prover-rating demo demo-rating
-
-# 16 families in four domains; two renamed variants each by default.
-agda-prover-rating generate smoke.json --seed 42
-agda-prover-rating check-suite smoke.json --agda /absolute/path/to/agda
+# Supply a bank conforming to portable-prover-rating.suite.v1.
+agda-prover-rating check-suite suite.json --agda /absolute/path/to/agda
 ```
 
 The public smoke suite exercises the harness, not the full range of mathematical
@@ -225,10 +221,10 @@ artifacts being evaluated. Use absolute paths if the executable is not on PATH:
 ```json
 [
   {
-    "id": "lambda-baseline-v1",
-    "revision": "REPLACE-WITH-COMMIT-CONTAINING-THIS-BASELINE",
+    "id": "reference-v1",
+    "revision": "REPLACE-WITH-EXACT-REFERENCE-COMMIT",
     "adapter": "candidate-json",
-    "argv": ["agda-prover-rating", "baseline", "{source}",
+    "argv": ["/absolute/path/to/reference-worker", "{source}",
              "--agda", "{agda}", "--budget", "{budget}"]
   },
   {
@@ -241,18 +237,18 @@ artifacts being evaluated. Use absolute paths if the executable is not on PATH:
 ]
 ```
 
-The lambda baseline tries a fixed list of four lambda expressions. It is
-intentionally weak. A contest should register a more capable immutable
-reference and a diverse panel; the baseline should neither fail nor solve
-almost everything on its calibration bank. The adapter reads the existing
+The original smoke reference tried only four lambda expressions and remains
+pinned in the historical campaign. It is not a bundled product command.
+A contest should register an immutable capable reference and a diverse panel;
+the reference should neither fail nor solve almost everything on its bank. The adapter reads the existing
 AgdaProver reconstruction contract and does not change proof search.
 
 ```sh
-agda-prover-rating run smoke.json provers.json run.json \
+agda-prover-rating run suite.json provers.json run.json \
   --agda /absolute/path/to/agda --budget 60 \
   --environment-id machine-and-resource-profile-v1
 
-agda-prover-rating rate run.json --anchor lambda-baseline-v1 \
+agda-prover-rating rate run.json --anchor reference-v1 \
   --output ratings.json --markdown ratings.md
 
 # Same protocol/suite/seeds, disjoint contestants, each fully evaluated:
@@ -320,7 +316,7 @@ dependent declaration blocks need a separate adapter and reviewed preservation
 rules. Do not weaken the prefix check to admit arbitrary file modifications.
 
 A non-Agda evaluator can emit `portable-prover-rating.results.v1` directly.
-`simulated-results.json` is a complete schema example; the authoritative field
+The archived development `simulated-results.json` is a schema example, not a product fixture; the authoritative field
 validation is in `prover_strength.data.validate`. Include task/family/domain
 identities and fingerprints, the full protocol, exact contestant revisions,
 declared seeds, and one row per contestant/task/seed. Successful rows require

@@ -1,18 +1,16 @@
-"""Command line for portable rating, portable Agda tasks, and reproducible demos."""
+"""Command line for independent proof evaluation, ratings, and history."""
 
 from __future__ import annotations
 
 import argparse
 import json
-import math
-import random
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any
 
-from .benchmark import smoke_suite
-from .data import SCHEMA, digest, merge
-from .model import SCALE, logistic, rate
+from .data import digest, merge
+from .model import rate
 from .process import MAX_OUTPUT
 
 
@@ -87,72 +85,9 @@ def markdown(report: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def simulated(*, seed: int = 7, families_per_domain: int = 50) -> dict[str, Any]:
-    """Independent synthetic Bernoulli responses, with shared task difficulties."""
-    rng = random.Random(seed)
-    abilities = {
-        "simulated-reference": 1500,
-        "simulated-strong": 1800,
-        "simulated-weak": 1200,
-    }
-    tasks, rows = [], []
-    for domain in ("logic", "equality", "induction", "dependent"):
-        for family in range(families_per_domain):
-            difficulty = rng.gauss(1500, 450)
-            family_id = f"{domain}-{family}"
-            for variant in range(3):
-                task_id = f"{family_id}-{variant}"
-                d = difficulty + rng.gauss(0, 60)
-                tasks.append(
-                    {
-                        "id": task_id,
-                        "domain": domain,
-                        "family": family_id,
-                        "sha256": digest(task_id),
-                    }
-                )
-                for name, ability in abilities.items():
-                    success = rng.random() < logistic((ability - d) / SCALE)
-                    rows.append(
-                        {
-                            "prover": name,
-                            "task": task_id,
-                            "seed": 0,
-                            "status": "verified" if success else "timeout",
-                            "elapsed_seconds": 1.0 if success else 10.0,
-                            "checker_accepted": success,
-                            "artifact_sha256": "simulated-not-a-proof"
-                            if success
-                            else None,
-                        }
-                    )
-    return {
-        "schema_version": SCHEMA,
-        "suite_id": digest(tasks),
-        "tasks": tasks,
-        "seeds": [0],
-        "protocol": {
-            "track": "SIMULATION-v1",
-            "budget_seconds": 10.0,
-            "environment_id": "simulation",
-            "checker_id": "none-simulation",
-            "enforcement": "none-simulation",
-            "synthetic": True,
-        },
-        "provers": [{"id": name, "revision": "simulation-v1"} for name in abilities],
-        "results": rows,
-    }
-
-
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="prover-strength")
     commands = parser.add_subparsers(dest="command", required=True)
-    generate = commands.add_parser(
-        "generate", help="write a self-contained public smoke suite"
-    )
-    generate.add_argument("output", type=Path)
-    generate.add_argument("--seed", type=int, default=0)
-    generate.add_argument("--variants", type=int, default=2)
     check = commands.add_parser(
         "check-suite", help="check all reference proofs in fresh Agda processes"
     )
@@ -187,18 +122,6 @@ def main(argv: list[str] | None = None) -> int:
     rating.add_argument(
         "--domain", help="fit a separate domain rating, if its graph is connected"
     )
-    demo = commands.add_parser(
-        "demo", help="write explicitly simulated results and a rating report"
-    )
-    demo.add_argument("directory", type=Path)
-    demo.add_argument("--seed", type=int, default=7)
-    demo.add_argument("--bootstrap", type=int, default=200)
-    baseline = commands.add_parser(
-        "baseline", help="fixed four-term lambda baseline worker"
-    )
-    baseline.add_argument("source", type=Path)
-    baseline.add_argument("--agda", default="agda")
-    baseline.add_argument("--budget", type=float, default=60)
     archive = commands.add_parser(
         "record", help="archive a completed commit observation"
     )
@@ -209,9 +132,48 @@ def main(argv: list[str] | None = None) -> int:
     )
     chart.add_argument("--history", type=Path, default=Path("history"))
     chart.add_argument("--port", type=int, default=8765)
+    static = commands.add_parser("export-history", help="export a static public chart")
+    static.add_argument("destination", type=Path)
+    static.add_argument("--history", type=Path, required=True)
+    pending = commands.add_parser(
+        "measure-pending", help="measure a bounded batch of new commits"
+    )
+    pending.add_argument("campaign", type=Path)
+    pending.add_argument("--product", type=Path, required=True)
+    pending.add_argument("--evaluator", type=Path, required=True)
+    pending.add_argument("--queue", type=Path, required=True)
+    pending.add_argument("--history", type=Path, required=True)
+    pending.add_argument("--tip", default="HEAD")
+    pending.add_argument("--limit", type=int, default=2)
+    pending.add_argument("--agda", default="agda")
+    pending.add_argument("--environment-id", required=True)
+    pending.add_argument("--network-policy", default="external-supervisor-unspecified")
+    pending.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
     try:
-        if args.command == "record":
+        if args.command == "measure-pending":
+            from .commits import measure_pending
+
+            batch = measure_pending(
+                args.product,
+                args.evaluator,
+                args.queue,
+                campaign=json.loads(args.campaign.read_text(encoding="utf-8")),
+                tip=args.tip,
+                limit=args.limit,
+                agda=args.agda,
+                history=args.history,
+                environment_id=args.environment_id,
+                network_policy=args.network_policy,
+            )
+            save(args.output, batch)
+            print(json.dumps(batch, ensure_ascii=False))
+            return 2 if batch["unresolved"] else 0
+        elif args.command == "export-history":
+            from .history import export
+
+            export(args.history, args.destination)
+        elif args.command == "record":
             from .history import record
 
             print(record(args.run, args.history))
@@ -219,8 +181,6 @@ def main(argv: list[str] | None = None) -> int:
             from .history import serve
 
             serve(args.history, args.port)
-        elif args.command == "generate":
-            save(args.output, smoke_suite(seed=args.seed, variants=args.variants))
         elif args.command == "rate":
             data = merge(
                 [json.loads(p.read_text(encoding="utf-8")) for p in args.results]
@@ -242,57 +202,35 @@ def main(argv: list[str] | None = None) -> int:
             if args.markdown:
                 args.markdown.parent.mkdir(parents=True, exist_ok=True)
                 args.markdown.write_text(markdown(report), encoding="utf-8")
-        elif args.command == "demo":
-            data = simulated(seed=args.seed)
-            report = rate(
-                data, "simulated-reference", bootstrap=args.bootstrap, seed=args.seed
-            )
-            save(args.directory / "simulated-results.json", data)
-            save(args.directory / "simulated-ratings.json", report)
-            (args.directory / "simulated-report.md").write_text(
-                markdown(report), encoding="utf-8"
-            )
         else:
             from . import runner
 
-            if args.command == "baseline":
-                if not math.isfinite(args.budget) or args.budget <= 0:
-                    raise ValueError("budget must be positive and finite")
-                print(
-                    json.dumps(
-                        runner.baseline(
-                            args.source, runner.executable(args.agda), args.budget
-                        )
-                    )
+            suite = json.loads(args.suite.read_text(encoding="utf-8"))
+            if args.command == "check-suite":
+                runner.validate_suite(
+                    suite,
+                    runner.executable(args.agda),
+                    reference_budget=args.reference_budget,
+                    max_output=args.max_output_bytes,
                 )
+                print(f"Checked {len(suite['tasks'])} reference proofs.")
             else:
-                suite = json.loads(args.suite.read_text(encoding="utf-8"))
-                if args.command == "check-suite":
-                    runner.validate_suite(
-                        suite,
-                        runner.executable(args.agda),
-                        reference_budget=args.reference_budget,
-                        max_output=args.max_output_bytes,
-                    )
-                    print(f"Checked {len(suite['tasks'])} reference proofs.")
-                else:
-                    if args.output.exists():
-                        raise ValueError("results already exist; use a new run path")
-                    provers = json.loads(args.provers.read_text(encoding="utf-8"))
-                    result = runner.run(
-                        suite,
-                        provers,
-                        agda=args.agda,
-                        budget=args.budget,
-                        environment_id=args.environment_id,
-                        seeds=args.seeds,
-                        artifacts=args.artifacts
-                        or args.output.with_suffix(".artifacts"),
-                        order_seed=args.order_seed,
-                        reference_budget=args.reference_budget,
-                        max_output=args.max_output_bytes,
-                    )
-                    save(args.output, result)
+                if args.output.exists():
+                    raise ValueError("results already exist; use a new run path")
+                provers = json.loads(args.provers.read_text(encoding="utf-8"))
+                result = runner.run(
+                    suite,
+                    provers,
+                    agda=args.agda,
+                    budget=args.budget,
+                    environment_id=args.environment_id,
+                    seeds=args.seeds,
+                    artifacts=args.artifacts or args.output.with_suffix(".artifacts"),
+                    order_seed=args.order_seed,
+                    reference_budget=args.reference_budget,
+                    max_output=args.max_output_bytes,
+                )
+                save(args.output, result)
     except (
         ValueError,
         TypeError,
@@ -300,6 +238,7 @@ def main(argv: list[str] | None = None) -> int:
         OSError,
         RuntimeError,
         TimeoutError,
+        subprocess.SubprocessError,
     ) as error:
         print(f"rating error: {error}", file=sys.stderr)
         return 2
