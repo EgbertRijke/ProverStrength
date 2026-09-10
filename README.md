@@ -64,6 +64,11 @@ available in Actions.
 Campaigns, queue receipts and immutable evidence live on the
 [`results` branch](https://github.com/EgbertRijke/ProverStrength/tree/results).
 Each campaign pins the evaluator, bank, participant commands and resources.
+The active AgdaProver campaign uses NNUE with the weights bundled in each
+measured product commit, starting at `eaabbc5`. No local training checkout or
+custom model path is needed. The frozen product snapshot records the model
+files and their hashes. Earlier symbolic-only measurements remain unchanged
+in separate chart series; they do not measure the bundled NNUE.
 Proof execution runs offline in a read-only-permission job; a separate job
 publishes observations and refreshes Pages without executing archived code.
 
