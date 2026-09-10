@@ -80,7 +80,17 @@ Open <http://127.0.0.1:8765/> for the local chart, or host the exported static
 directory. Both read existing measurements without launching proof search.
 `prover-strength record PATH_TO_RUN --history observations/history` archives a
 completed commit observation; `measure-pending --help` describes the bounded
-local commit scheduler.
+local commit scheduler. `run` accepts arbitrary declared executable commands;
+the initial `measure-pending` controller supports Python participants with a
+`src/` layout and a frozen evaluator/reference checkout.
+
+Campaign v1 specifies `first_commit`, `evaluator_commit`, a `suite` path and
+SHA-256, `reference` and `participant` module/argument/adapter descriptions, and
+an explicit `profile` of budgets and seeds. The data branch's
+[`campaigns/agda-prover.json`](https://github.com/EgbertRijke/ProverStrength/blob/results/campaigns/agda-prover.json)
+is the active specification. Repository paths remain local CLI inputs, not
+credentials or executable downloads hidden in campaign data. Completed entries
+are reused within the same campaign, toolchain and controller edition.
 
 ## Development and provenance
 
