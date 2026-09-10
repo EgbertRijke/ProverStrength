@@ -1,0 +1,15 @@
+{
+  "schema_version": "prover-strength.commit-batch.v1",
+  "campaign": "a7f8f6ab7c2a92548173ce8b774a612f0d7a1940fa2bcafb41cd13f2781649c6",
+  "eligible": [
+    "d2b0d7c488b5a478fb5cc464509345b6c74c9b01"
+  ],
+  "attempted": [
+    "d2b0d7c488b5a478fb5cc464509345b6c74c9b01"
+  ],
+  "completed": [
+    "d2b0d7c488b5a478fb5cc464509345b6c74c9b01"
+  ],
+  "unresolved": [],
+  "pending": []
+}
