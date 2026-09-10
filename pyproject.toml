@@ -18,6 +18,9 @@ agda-prover-rating = "prover_strength.cli:main"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+prover_strength = ["history.html"]
+
 [tool.ruff]
 line-length = 88
 

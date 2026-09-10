@@ -199,9 +199,27 @@ def main(argv: list[str] | None = None) -> int:
     baseline.add_argument("source", type=Path)
     baseline.add_argument("--agda", default="agda")
     baseline.add_argument("--budget", type=float, default=60)
+    archive = commands.add_parser(
+        "record", help="archive a completed commit observation"
+    )
+    archive.add_argument("run", type=Path)
+    archive.add_argument("--history", type=Path, default=Path("history"))
+    chart = commands.add_parser(
+        "serve-history", help="serve the live local commit chart"
+    )
+    chart.add_argument("--history", type=Path, default=Path("history"))
+    chart.add_argument("--port", type=int, default=8765)
     args = parser.parse_args(argv)
     try:
-        if args.command == "generate":
+        if args.command == "record":
+            from .history import record
+
+            print(record(args.run, args.history))
+        elif args.command == "serve-history":
+            from .history import serve
+
+            serve(args.history, args.port)
+        elif args.command == "generate":
             save(args.output, smoke_suite(seed=args.seed, variants=args.variants))
         elif args.command == "rate":
             data = merge(

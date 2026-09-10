@@ -1,0 +1,145 @@
+{
+  "schema_version": "prover-strength.history-point.v1",
+  "id": "b7529656b0eec5045e6d7e4a996497b965c81c51211ef789517caae851373e30",
+  "series_id": "077e65bcde5278b4df135844ab1a797409cfaf76ded67a8bb1cbda9980de9d61",
+  "series": {
+    "suite_id": "babcb1ffeba51025e8351a275fe1b2a0cbf809c8af0f6938e097a7e901e40500",
+    "protocol": {
+      "track": "agda-intensional-without-K-exact-split-v1",
+      "budget_seconds": 10,
+      "environment_id": "m3-max-36gb-macos26.6.2-agda2.8-stock-offline-v1",
+      "checker_id": "agda-2.8.0-sha256:b49f04404dd9bc3ca6ff27c0d3f0e3f8906ae1eda0bad5fbae81dc857a7b5156",
+      "checker_flags": [
+        "--safe",
+        "--without-K",
+        "--exact-split",
+        "--no-libraries",
+        "--no-default-libraries",
+        "--ignore-all-interfaces"
+      ],
+      "enforcement": "local-wall-stream-bounded-process-group-v2",
+      "max_output_bytes": 16777216,
+      "reference_check_budget_seconds": 60,
+      "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+      "machine": "arm64",
+      "cpu_count": 14,
+      "suite_role": "public-smoke-only"
+    },
+    "profile": {
+      "ranker": "symbolic",
+      "search": "deep",
+      "model": null,
+      "action_model": null,
+      "budget_seconds": 10,
+      "max_candidates": 8000,
+      "seeds": [
+        0
+      ],
+      "order_seed": 0,
+      "max_output_bytes": 16777216,
+      "reference_check_budget_seconds": 60
+    },
+    "environment": {
+      "id": "m3-max-36gb-macos26.6.2-agda2.8-stock-offline-v1",
+      "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+      "python": "3.14.7 (main, Aug  5 2026, 10:29:49) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "python_sha256": "87d4df53fd91304be5bac391fb204643c36b7df2023c04a0953bcbc7d4fdf634",
+      "cpu": "Apple M3 Max",
+      "memory_bytes": 38654705664,
+      "network": "inherited macOS sandbox-exec deny network*",
+      "workers": 1,
+      "python_hash_seed": 0,
+      "product_environment_overrides": {},
+      "model_override": null,
+      "site_packages": "disabled in workers",
+      "cache_policy": "new task and independent-check directories; immutable sources; warm Agda builtin installation"
+    },
+    "evaluator_tree": "9649a72a293b66e69aaa597e2f6436f178e77e6d",
+    "target_command": {
+      "adapter": "agdaprover",
+      "argv": [
+        "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/bin/python3.14",
+        "-B",
+        "-S",
+        "-c",
+        "import sys; sys.path.insert(0, '$PRODUCT/src'); from agdaprover.cli import main; raise SystemExit(main())",
+        "prove-prefix",
+        "{source}",
+        "--agda",
+        "{agda}",
+        "--deep",
+        "--ranker",
+        "symbolic",
+        "--timeout",
+        "{budget}"
+      ],
+      "executable_sha256": "87d4df53fd91304be5bac391fb204643c36b7df2023c04a0953bcbc7d4fdf634"
+    },
+    "reference_panel": [
+      {
+        "id": "lambda-baseline-v1",
+        "revision": "25024ccf30f77fd661e78abe1689564b937bd9f2",
+        "adapter": "candidate-json",
+        "argv": [
+          "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/bin/python3.14",
+          "-B",
+          "-S",
+          "-c",
+          "import sys; sys.path.insert(0, '$EVALUATOR/src'); from prover_strength.cli import main; raise SystemExit(main())",
+          "baseline",
+          "{source}",
+          "--agda",
+          "{agda}",
+          "--budget",
+          "{budget}"
+        ],
+        "executable_sha256": "87d4df53fd91304be5bac391fb204643c36b7df2023c04a0953bcbc7d4fdf634"
+      }
+    ],
+    "method": "conditional-rasch-bt-v1",
+    "prior_sd_points": 800.0
+  },
+  "product_commit": "d2b0d7c488b5a478fb5cc464509345b6c74c9b01",
+  "evaluator_commit": "25024ccf30f77fd661e78abe1689564b937bd9f2",
+  "measured_at": "2026-09-10T20:08:41.875545+00:00",
+  "status": "measured",
+  "solved": 11,
+  "total": 16,
+  "outcomes": {
+    "verified": 11,
+    "timeout": 5
+  },
+  "balanced_solve_rate": 0.6875,
+  "solve_rate_by_domain": {
+    "dependent": 0.75,
+    "equality": 1.0,
+    "induction": 0.0,
+    "logic": 1.0
+  },
+  "provisional_rating": 2138.23,
+  "rating_interval95": null,
+  "prior_dependent": true,
+  "warnings": [
+    "Small family sample: ratings are provisional; renamed tasks are not new families.",
+    "Complete/quasi separation: finite ratings depend on the prior; intervals withheld."
+  ],
+  "effort": {
+    "accounting": "agdaprover.p0.v1-self-reported",
+    "assigned_trials": 16,
+    "cpu_seconds": null,
+    "actions_expanded": {
+      "observed": 115,
+      "known_trials": 11,
+      "unknown_trials": 5,
+      "total": null
+    },
+    "verifier_calls": {
+      "observed": 126,
+      "known_trials": 11,
+      "unknown_trials": 5,
+      "total": null
+    },
+    "proofs_per_1000_actions": null
+  },
+  "results_sha256": "919fa67e6c7445c34423e9bffe900f7c9705e41d53a44c4d9833f74d52570263"
+}

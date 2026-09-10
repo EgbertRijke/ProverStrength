@@ -1,0 +1,443 @@
+{
+  "schema_version": "portable-prover-rating.results.v1",
+  "suite_id": "babcb1ffeba51025e8351a275fe1b2a0cbf809c8af0f6938e097a7e901e40500",
+  "protocol": {
+    "track": "agda-intensional-without-K-exact-split-v1",
+    "budget_seconds": 10,
+    "environment_id": "m3-max-36gb-macos26.6.2-agda2.8-stock-offline-v1",
+    "checker_id": "agda-2.8.0-sha256:b49f04404dd9bc3ca6ff27c0d3f0e3f8906ae1eda0bad5fbae81dc857a7b5156",
+    "checker_flags": [
+      "--safe",
+      "--without-K",
+      "--exact-split",
+      "--no-libraries",
+      "--no-default-libraries",
+      "--ignore-all-interfaces"
+    ],
+    "enforcement": "local-wall-stream-bounded-process-group-v2",
+    "max_output_bytes": 16777216,
+    "reference_check_budget_seconds": 60,
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "cpu_count": 14,
+    "suite_role": "public-smoke-only"
+  },
+  "tasks": [
+    {
+      "id": "identity-0",
+      "domain": "logic",
+      "family": "identity",
+      "sha256": "55cb670c91ab9aa49abe5c896039681835319184b4d687fa0808fbb10c168379"
+    },
+    {
+      "id": "composition-0",
+      "domain": "logic",
+      "family": "composition",
+      "sha256": "3435bddbab748d9cd749be8e3f93ce74ec2e16b5566a14ec071f4e8811d3ab7c"
+    },
+    {
+      "id": "exchange-0",
+      "domain": "logic",
+      "family": "exchange",
+      "sha256": "78ca4033c214b521fa726f6278cf60e6796616beff7277931c2612d15f8a67ba"
+    },
+    {
+      "id": "contraction-0",
+      "domain": "logic",
+      "family": "contraction",
+      "sha256": "600293b8b20adac208b12cb2ddc6aec4e9c5a495887008afedeedb5578b70b87"
+    },
+    {
+      "id": "reflexivity-0",
+      "domain": "equality",
+      "family": "reflexivity",
+      "sha256": "1798bf64e25a7b0704bdcc8c6f7c59d4cdbd841c60c35ec0789cea8eb6ad8906"
+    },
+    {
+      "id": "symmetry-0",
+      "domain": "equality",
+      "family": "symmetry",
+      "sha256": "146320ad79619d9f33360271545694310a6013bbbaa5937bf238bef4a3c46c38"
+    },
+    {
+      "id": "transitivity-0",
+      "domain": "equality",
+      "family": "transitivity",
+      "sha256": "f447c6647eef8f49a1891fbc10773d3e09b3692145d319dbdf1a0dc6f9bc4e4f"
+    },
+    {
+      "id": "congruence-0",
+      "domain": "equality",
+      "family": "congruence",
+      "sha256": "db405d5276c8b880209bb1465df094bb9dc68c528a756d79dec09a2e8bd137fb"
+    },
+    {
+      "id": "add-right-zero-0",
+      "domain": "induction",
+      "family": "add-right-zero",
+      "sha256": "3dfd17742f5256b7155e1816bed00d9ae81a791d21e768e0ff814ae2c93d6a82"
+    },
+    {
+      "id": "add-right-succ-0",
+      "domain": "induction",
+      "family": "add-right-succ",
+      "sha256": "0344479879dd4f5c30a48408b175d4b4608f0c7b34867e02994ce8216186bde1"
+    },
+    {
+      "id": "add-associativity-0",
+      "domain": "induction",
+      "family": "add-associativity",
+      "sha256": "bc83308051ac7c3c07bbb977b2066de39f37a0bac1670c38c727ec7a673b7a0b"
+    },
+    {
+      "id": "append-right-unit-0",
+      "domain": "induction",
+      "family": "append-right-unit",
+      "sha256": "5c713422b2d52c04127046425716d369909ee1e39ab563bbd1744c984f5e4a2e"
+    },
+    {
+      "id": "transport-0",
+      "domain": "dependent",
+      "family": "transport",
+      "sha256": "73033ac21851953d03d3979f4600c3db4dac3a13235135f62fd157ad2568438e"
+    },
+    {
+      "id": "sigma-map-0",
+      "domain": "dependent",
+      "family": "sigma-map",
+      "sha256": "e800e9e8d9d7c02b31bb4d6e6ddc2adf0668c8adffac6996dc46572e1c6836d6"
+    },
+    {
+      "id": "vector-map-0",
+      "domain": "dependent",
+      "family": "vector-map",
+      "sha256": "40a87c9b6c406b2b5289c677fd265c8354846a855a6d742fe3b3638bdcf6a249"
+    },
+    {
+      "id": "vector-append-0",
+      "domain": "dependent",
+      "family": "vector-append",
+      "sha256": "bf2e59a7642905b9613cb9f96fe7fd939874ef4adc4604cd6481c5038efede6e"
+    }
+  ],
+  "seeds": [
+    0
+  ],
+  "provers": [
+    {
+      "id": "lambda-baseline-v1",
+      "revision": "25024ccf30f77fd661e78abe1689564b937bd9f2",
+      "adapter": "candidate-json",
+      "argv": [
+        "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/bin/python3.14",
+        "-B",
+        "-S",
+        "-c",
+        "import sys; sys.path.insert(0, '/Users/egbertrijke/Repositories/ProverStrength/runs/smoke-v2-d2b0d7c-20260910/evaluator/src'); from prover_strength.cli import main; raise SystemExit(main())",
+        "baseline",
+        "{source}",
+        "--agda",
+        "{agda}",
+        "--budget",
+        "{budget}"
+      ],
+      "executable_sha256": "87d4df53fd91304be5bac391fb204643c36b7df2023c04a0953bcbc7d4fdf634"
+    },
+    {
+      "id": "AgdaProver-d2b0d7c-symbolic-deep",
+      "revision": "d2b0d7c488b5a478fb5cc464509345b6c74c9b01",
+      "adapter": "agdaprover",
+      "argv": [
+        "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/bin/python3.14",
+        "-B",
+        "-S",
+        "-c",
+        "import sys; sys.path.insert(0, '/Users/egbertrijke/Repositories/ProverStrength/runs/smoke-v2-d2b0d7c-20260910/product/src'); from agdaprover.cli import main; raise SystemExit(main())",
+        "prove-prefix",
+        "{source}",
+        "--agda",
+        "{agda}",
+        "--deep",
+        "--ranker",
+        "symbolic",
+        "--timeout",
+        "{budget}"
+      ],
+      "executable_sha256": "87d4df53fd91304be5bac391fb204643c36b7df2023c04a0953bcbc7d4fdf634"
+    }
+  ],
+  "results": [
+    {
+      "prover": "AgdaProver-d2b0d7c-symbolic-deep",
+      "task": "composition-0",
+      "seed": 0,
+      "status": "verified",
+      "checker_accepted": true,
+      "artifact_sha256": "742c0ef2a1efdae22ffb3e48b7de1f8fafdd4e23a77fbbd9d1caba287e44bd26",
+      "elapsed_seconds": 1.0581475829822011
+    },
+    {
+      "prover": "AgdaProver-d2b0d7c-symbolic-deep",
+      "task": "contraction-0",
+      "seed": 0,
+      "status": "verified",
+      "checker_accepted": true,
+      "artifact_sha256": "1f969eb90eba177e2293719f4f4f24a197d0c2917d77a5c402ff047917083d42",
+      "elapsed_seconds": 1.0708942499477416
+    },
+    {
+      "prover": "AgdaProver-d2b0d7c-symbolic-deep",
+      "task": "vector-map-0",
+      "seed": 0,
+      "status": "verified",
+      "checker_accepted": true,
+      "artifact_sha256": "7dab709755307011ec8681fc67b5d746741b14cf65d931ea4ec3cd178d5b76f7",
+      "elapsed_seconds": 1.4209331669844687
+    },
+    {
+      "prover": "lambda-baseline-v1",
+      "task": "add-associativity-0",
+      "seed": 0,
+      "status": "unsolved",
+      "checker_accepted": false,
+      "elapsed_seconds": 0.2277692910283804
+    },
+    {
+      "prover": "AgdaProver-d2b0d7c-symbolic-deep",
+      "task": "add-right-succ-0",
+      "seed": 0,
+      "status": "timeout",
+      "checker_accepted": false,
+      "elapsed_seconds": 10.002489999984391
+    },
+    {
+      "prover": "AgdaProver-d2b0d7c-symbolic-deep",
+      "task": "exchange-0",
+      "seed": 0,
+      "status": "verified",
+      "checker_accepted": true,
+      "artifact_sha256": "94d49c8d2684429e863edea8b8cc09ece8b9f84aba673dab6ad5dbd7cb93aea1",
+      "elapsed_seconds": 1.0644526669639163
+    },
+    {
+      "prover": "lambda-baseline-v1",
+      "task": "identity-0",
+      "seed": 0,
+      "status": "verified",
+      "checker_accepted": true,
+      "artifact_sha256": "260684636ede2bead6f6a586f6b0f8c7a6e0d44d51bf763b836c288f3fe25af5",
+      "elapsed_seconds": 0.2176598749938421
+    },
+    {
+      "prover": "lambda-baseline-v1",
+      "task": "symmetry-0",
+      "seed": 0,
+      "status": "unsolved",
+      "checker_accepted": false,
+      "elapsed_seconds": 0.19187291600974277
+    },
+    {
+      "prover": "lambda-baseline-v1",
+      "task": "congruence-0",
+      "seed": 0,
+      "status": "unsolved",
+      "checker_accepted": false,
+      "elapsed_seconds": 0.18995445902692154
+    },
+    {
+      "prover": "lambda-baseline-v1",
+      "task": "sigma-map-0",
+      "seed": 0,
+      "status": "unsolved",
+      "checker_accepted": false,
+      "elapsed_seconds": 0.1916407080134377
+    },
+    {
+      "prover": "AgdaProver-d2b0d7c-symbolic-deep",
+      "task": "add-right-zero-0",
+      "seed": 0,
+      "status": "timeout",
+      "checker_accepted": false,
+      "elapsed_seconds": 10.002365916967392
+    },
+    {
+      "prover": "AgdaProver-d2b0d7c-symbolic-deep",
+      "task": "add-associativity-0",
+      "seed": 0,
+      "status": "timeout",
+      "checker_accepted": false,
+      "elapsed_seconds": 10.002437832998112
+    },
+    {
+      "prover": "AgdaProver-d2b0d7c-symbolic-deep",
+      "task": "sigma-map-0",
+      "seed": 0,
+      "status": "verified",
+      "checker_accepted": true,
+      "artifact_sha256": "1ddbaba0b1155736ca7571f8ba257f61fc0baf1634ec45b8c31ce93614257be3",
+      "elapsed_seconds": 1.420055249996949
+    },
+    {
+      "prover": "AgdaProver-d2b0d7c-symbolic-deep",
+      "task": "append-right-unit-0",
+      "seed": 0,
+      "status": "timeout",
+      "checker_accepted": false,
+      "elapsed_seconds": 10.002393707982264
+    },
+    {
+      "prover": "lambda-baseline-v1",
+      "task": "composition-0",
+      "seed": 0,
+      "status": "verified",
+      "checker_accepted": true,
+      "artifact_sha256": "17daeda1a45bd1412ee203de7c3e23c3b09cde4f7616b3de7a95c43b6f0b50da",
+      "elapsed_seconds": 0.2596129590529017
+    },
+    {
+      "prover": "lambda-baseline-v1",
+      "task": "append-right-unit-0",
+      "seed": 0,
+      "status": "unsolved",
+      "checker_accepted": false,
+      "elapsed_seconds": 0.23219524999149144
+    },
+    {
+      "prover": "lambda-baseline-v1",
+      "task": "exchange-0",
+      "seed": 0,
+      "status": "verified",
+      "checker_accepted": true,
+      "artifact_sha256": "e7b392416094d68b358426cbec84722a7ea86a97f39d4377e78f3257f8bf289c",
+      "elapsed_seconds": 0.2931549169588834
+    },
+    {
+      "prover": "AgdaProver-d2b0d7c-symbolic-deep",
+      "task": "transport-0",
+      "seed": 0,
+      "status": "verified",
+      "checker_accepted": true,
+      "artifact_sha256": "ac19c3b2898c89967db40125a1724237af5e8621d9ac87e5206e5400420ddcfb",
+      "elapsed_seconds": 1.2072997920331545
+    },
+    {
+      "prover": "lambda-baseline-v1",
+      "task": "contraction-0",
+      "seed": 0,
+      "status": "verified",
+      "checker_accepted": true,
+      "artifact_sha256": "881af2d6d06d4cb1d33412ae50026260c1f82b1fb4e9532befe56d3b633158a3",
+      "elapsed_seconds": 0.33018008299404755
+    },
+    {
+      "prover": "lambda-baseline-v1",
+      "task": "add-right-succ-0",
+      "seed": 0,
+      "status": "unsolved",
+      "checker_accepted": false,
+      "elapsed_seconds": 0.22016195801552385
+    },
+    {
+      "prover": "AgdaProver-d2b0d7c-symbolic-deep",
+      "task": "symmetry-0",
+      "seed": 0,
+      "status": "verified",
+      "checker_accepted": true,
+      "artifact_sha256": "ff89d8cfcfb012ad9a208eba0fa135b2c1309189836da72e64624ae691573e8c",
+      "elapsed_seconds": 1.0862630410119891
+    },
+    {
+      "prover": "lambda-baseline-v1",
+      "task": "vector-append-0",
+      "seed": 0,
+      "status": "unsolved",
+      "checker_accepted": false,
+      "elapsed_seconds": 0.2447159580187872
+    },
+    {
+      "prover": "AgdaProver-d2b0d7c-symbolic-deep",
+      "task": "reflexivity-0",
+      "seed": 0,
+      "status": "verified",
+      "checker_accepted": true,
+      "artifact_sha256": "921ed855441efb1650d64312c9b321e4f682f738f7bb497bfc2c2ef6ba7de812",
+      "elapsed_seconds": 1.1296805419842713
+    },
+    {
+      "prover": "lambda-baseline-v1",
+      "task": "transitivity-0",
+      "seed": 0,
+      "status": "unsolved",
+      "checker_accepted": false,
+      "elapsed_seconds": 0.19230204197810963
+    },
+    {
+      "prover": "AgdaProver-d2b0d7c-symbolic-deep",
+      "task": "congruence-0",
+      "seed": 0,
+      "status": "verified",
+      "checker_accepted": true,
+      "artifact_sha256": "84efe360575df7826a1d0bafed6b4285137cebc8b09638d582a2010568b9537b",
+      "elapsed_seconds": 1.2176362079917453
+    },
+    {
+      "prover": "lambda-baseline-v1",
+      "task": "add-right-zero-0",
+      "seed": 0,
+      "status": "unsolved",
+      "checker_accepted": false,
+      "elapsed_seconds": 0.2067390000447631
+    },
+    {
+      "prover": "lambda-baseline-v1",
+      "task": "reflexivity-0",
+      "seed": 0,
+      "status": "unsolved",
+      "checker_accepted": false,
+      "elapsed_seconds": 0.1933466670452617
+    },
+    {
+      "prover": "AgdaProver-d2b0d7c-symbolic-deep",
+      "task": "identity-0",
+      "seed": 0,
+      "status": "verified",
+      "checker_accepted": true,
+      "artifact_sha256": "0d83c99e923ec138500d573355ccc18ed2aa27164a6631912b73d3b6f4e94833",
+      "elapsed_seconds": 1.087464083044324
+    },
+    {
+      "prover": "AgdaProver-d2b0d7c-symbolic-deep",
+      "task": "transitivity-0",
+      "seed": 0,
+      "status": "verified",
+      "checker_accepted": true,
+      "artifact_sha256": "6e05889fc9171418e91d1dc2757086ff56088f39e63e35d209e8d39e0d93dfb9",
+      "elapsed_seconds": 1.126309500017669
+    },
+    {
+      "prover": "lambda-baseline-v1",
+      "task": "vector-map-0",
+      "seed": 0,
+      "status": "unsolved",
+      "checker_accepted": false,
+      "elapsed_seconds": 0.2426043750019744
+    },
+    {
+      "prover": "AgdaProver-d2b0d7c-symbolic-deep",
+      "task": "vector-append-0",
+      "seed": 0,
+      "status": "timeout",
+      "checker_accepted": false,
+      "elapsed_seconds": 10.002399540971965
+    },
+    {
+      "prover": "lambda-baseline-v1",
+      "task": "transport-0",
+      "seed": 0,
+      "status": "unsolved",
+      "checker_accepted": false,
+      "elapsed_seconds": 0.19300137500977144
+    }
+  ],
+  "order_seed": 0
+}

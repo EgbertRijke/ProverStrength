@@ -32,10 +32,23 @@ observations now; chart sophistication and stronger anchors must not delay this.
 - Append complete observations without overwriting previous outcomes. Display
   missing/failed measurements explicitly and separate incompatible editions.
 - Provide a local auto-refreshing chart. Show balanced and domain solve rates;
-  withhold empirical rating points when saturation/separation or disconnected
-  evidence makes their magnitude unidentifiable. Do not invent historical scores.
+  label early regularized ratings as provisional and prior-dependent when
+  appropriate. Withhold unsupported intervals and disconnected ratings; do not
+  invent historical scores. Early imperfections must not delay measurement.
 - Add an external watcher/queue for subsequent commits without coupling product
   commits or normal CI to expensive measurement. Freeze a small default suite.
+
+First measured point is now archived: [AgdaProver d2b0d7c](history/README.md),
+11/16 tasks and a provisional 2138.23 smoke rating. The read-only live chart and
+append-only recording interface are implemented. Supplementary effort records
+include failed attempts when known and expose missing counter coverage; the
+first point has five unknown timeout counters and no complete efficiency ratio.
+See the [history checkpoint review](docs/reviews/first-history-point.md) for
+verification and the remaining boundaries.
+
+Next priority after this commit: make the frozen-snapshot measurement command
+reusable and connect an external commit watcher. Keep taking real measurements
+as product commits arrive; stronger anchors and a larger bank are not blockers.
 
 ## Later qualification
 

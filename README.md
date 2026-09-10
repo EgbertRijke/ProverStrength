@@ -53,10 +53,21 @@ not relative wins. A perfect record against a weak baseline does not establish a
 finite strength gap: separation is flagged and intervals are withheld. A finite
 bank cannot measure arbitrarily strong provers without eventually saturating.
 
-A live history keyed to exact AgdaProver commits is the next implementation
-checkpoint. It will retain solve rates and unmeasurable-rating states rather
-than drawing misleading finite scores, and keep incompatible protocols separate.
-See [the bounded implementation plan](PLAN.md).
+A live local chart shows recorded product commits, solve rates and explicitly
+provisional ratings. Different protocols remain separate series. Start it with:
+
+```sh
+prover-strength serve-history --history history
+```
+
+Open <http://127.0.0.1:8765/>. It refreshes every ten seconds without rerunning
+proof search. Archive a completed commit observation with
+`prover-strength record PATH_TO_RUN --history history`; the chart then picks it
+up automatically. This does not yet launch measurements on new Git commits.
+
+The [first recorded measurement](history/README.md) is AgdaProver `d2b0d7c`:
+11/16 tasks, provisional rating 2138 against the fixed 1500 smoke baseline.
+See [the bounded implementation plan](PLAN.md) for the remaining commit watcher.
 
 ## Tests and provenance
 
