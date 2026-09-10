@@ -1,0 +1,2 @@
+# Preserve the supplied patch's context lines and checksum exactly.
+portable-prover-rating.patch -whitespace

@@ -1,9 +1,13 @@
-# Portable Prover Rating
+# Portable prover rating
 
 Portable Prover Rating (PPR) measures the relative ability of automatic provers
 to produce accepted proofs within a fixed resource budget. It uses an Elo-like
 scale with an immutable reference prover assigned 1500 points. The reference
 is a convention, not a claim that the prover equals a chess player rated 1500.
+
+The maintained implementation is the standalone `prover-strength` package in
+this repository; no patch to AgdaProver is required. The original implementation
+bundle and measurements remain preserved at commit `936d830`.
 
 The implementation has no third-party Python dependencies. The rating engine
 accepts results from any conforming evaluator; the included runner evaluates
@@ -197,7 +201,7 @@ family-balanced relative scale and explicit uncertainty to that general pattern.
 
 ## Run it
 
-Install the modified checkout with the usual `python3 -m pip install .`.
+Install this standalone checkout with `python3 -m pip install .`.
 
 ```sh
 # Statistical demonstration; no Agda required, and every result is simulated.
@@ -269,13 +273,20 @@ compiler identities, task manifests, or seed schedules. Missing and duplicate
 observations are rejected.
 
 The local POSIX runner enforces a wall deadline on the worker's process group
-and includes final fresh checking in that deadline. It runs one worker at a
+and includes final fresh checking in that deadline. It bounds combined stdout
+and stderr during execution, not after potentially unlimited file growth.
+`--max-output-bytes` defaults to 16 MiB per process and can be increased for
+larger artifacts. Preliminary reference checking has a separate explicit
+`--reference-budget` (default 60 seconds). Both settings are recorded in the
+protocol; changing them requires a separate comparison series. It runs one worker at a
 time. It **does not implement a hostile-code sandbox or aggregate memory, GPU,
 CPU, and network quotas**. Supply those using a controlled external supervisor
 for competition measurements, and identify the profile in `environment_id`.
-Local output is explicitly marked `local-wall-process-group-v1`. An evaluator
-cannot infer resource equality from an arbitrary profile name. The executable
-is hashed, but toolchain data, model files, and dependencies must also be pinned
+New output is marked `local-wall-stream-bounded-process-group-v2`; historical
+v1 results are not silently merged with it. An evaluator cannot infer resource
+equality from an arbitrary profile name. Checker and contestant executable files
+are hashed and checked for mutation, but toolchain data, model files,
+interpreter-loaded source and dependencies must also be pinned
 in the evaluation image. This runner's metadata alone is not a full attestation.
 
 The run writes an adjacent `.artifacts` directory with worker/checker logs,
@@ -310,7 +321,7 @@ rules. Do not weaken the prefix check to admit arbitrary file modifications.
 
 A non-Agda evaluator can emit `portable-prover-rating.results.v1` directly.
 `simulated-results.json` is a complete schema example; the authoritative field
-validation is in `agdaprover.rating.data.validate`. Include task/family/domain
+validation is in `prover_strength.data.validate`. Include task/family/domain
 identities and fingerprints, the full protocol, exact contestant revisions,
 declared seeds, and one row per contestant/task/seed. Successful rows require
 `checker_accepted: true`, `artifact_sha256`, and an elapsed time within budget.
