@@ -1,0 +1,17 @@
+{
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+    "-m",
+    "agdaprover.rating",
+    "baseline",
+    "/tmp/ppr-task-y2rvdal2/Task.agda",
+    "--agda",
+    "/workspace/scratch/dfefc82d27f3/toolchain/agda",
+    "--budget",
+    "10.0"
+  ],
+  "exit_code": 0,
+  "stdout": "{\"candidate\": \"{-# OPTIONS --without-K --exact-split #-}\\nmodule Task where\\n\\ngoal : {s47ff242909bfcdf7 s3c7aced33f669eb9 s11057d5c557d28dd : Set} \\u2192 (s47ff242909bfcdf7 \\u2192 s3c7aced33f669eb9 \\u2192 s11057d5c557d28dd) \\u2192 s3c7aced33f669eb9 \\u2192 s47ff242909bfcdf7 \\u2192 s11057d5c557d28dd\\ngoal = \\u03bb f y x \\u2192 f x y\\n\"}\n",
+  "stderr": "",
+  "checker_diagnostic": "Checking Task (/tmp/ppr-check-y30n77wu/Task.agda).\n"
+}

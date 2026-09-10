@@ -1,0 +1,137 @@
+{
+  "schema_version": "portable-prover-rating.suite.v1",
+  "name": "Agda portable smoke v1",
+  "role": "public-smoke-only",
+  "track": "agda-intensional-without-K-exact-split-v1",
+  "generator_seed": 20260910,
+  "tasks": [
+    {
+      "id": "identity-0",
+      "domain": "logic",
+      "family": "identity",
+      "prefix": "{-# OPTIONS --without-K --exact-split #-}\nmodule Task where\n\ngoal : {s1e4f5deee1ca72ea : Set} \u2192 s1e4f5deee1ca72ea \u2192 s1e4f5deee1ca72ea\n",
+      "starter": "goal = {!!}\n",
+      "reference": "goal s5da7f100ad8c2e71 = s5da7f100ad8c2e71\n"
+    },
+    {
+      "id": "composition-0",
+      "domain": "logic",
+      "family": "composition",
+      "prefix": "{-# OPTIONS --without-K --exact-split #-}\nmodule Task where\n\ngoal : {s6e72d0cbfd18b131 s271f16a037b3bcb1 s1095378b75effb50 : Set} \u2192 (s6e72d0cbfd18b131 \u2192 s271f16a037b3bcb1) \u2192 (s271f16a037b3bcb1 \u2192 s1095378b75effb50) \u2192 s6e72d0cbfd18b131 \u2192 s1095378b75effb50\n",
+      "starter": "goal = {!!}\n",
+      "reference": "goal s8f97f71de22e3895 sd42d99c9e137c495 sd411a80780b22723 = sd42d99c9e137c495 (s8f97f71de22e3895 sd411a80780b22723)\n"
+    },
+    {
+      "id": "exchange-0",
+      "domain": "logic",
+      "family": "exchange",
+      "prefix": "{-# OPTIONS --without-K --exact-split #-}\nmodule Task where\n\ngoal : {s47ff242909bfcdf7 s3c7aced33f669eb9 s11057d5c557d28dd : Set} \u2192 (s47ff242909bfcdf7 \u2192 s3c7aced33f669eb9 \u2192 s11057d5c557d28dd) \u2192 s3c7aced33f669eb9 \u2192 s47ff242909bfcdf7 \u2192 s11057d5c557d28dd\n",
+      "starter": "goal = {!!}\n",
+      "reference": "goal s7cd55e6a299207c3 sbee743998bea9e67 s7c92e6e0a1d21909 = s7cd55e6a299207c3 s7c92e6e0a1d21909 sbee743998bea9e67\n"
+    },
+    {
+      "id": "contraction-0",
+      "domain": "logic",
+      "family": "contraction",
+      "prefix": "{-# OPTIONS --without-K --exact-split #-}\nmodule Task where\n\ngoal : {s9e60ff56bc819762 s4e8b227a61c3930b : Set} \u2192 (s9e60ff56bc819762 \u2192 s9e60ff56bc819762 \u2192 s4e8b227a61c3930b) \u2192 s9e60ff56bc819762 \u2192 s4e8b227a61c3930b\n",
+      "starter": "goal = {!!}\n",
+      "reference": "goal s9082d9c829c41043 sf2933aac0bc7471a = s9082d9c829c41043 sf2933aac0bc7471a sf2933aac0bc7471a\n"
+    },
+    {
+      "id": "reflexivity-0",
+      "domain": "equality",
+      "family": "reflexivity",
+      "prefix": "{-# OPTIONS --without-K --exact-split #-}\nmodule Task where\n\ndata s6a6f9575908c2ec1 {s20965ee4027a7025 : Set} (s4dd0a90e6b43361d : s20965ee4027a7025) : s20965ee4027a7025 \u2192 Set where\n  se8e9dee7bec74064 : s6a6f9575908c2ec1 s4dd0a90e6b43361d s4dd0a90e6b43361d\n\ngoal : {s20965ee4027a7025 : Set} \u2192 (s4dd0a90e6b43361d : s20965ee4027a7025) \u2192 s6a6f9575908c2ec1 s4dd0a90e6b43361d s4dd0a90e6b43361d\n",
+      "starter": "goal = {!!}\n",
+      "reference": "goal s4dd0a90e6b43361d = se8e9dee7bec74064\n"
+    },
+    {
+      "id": "symmetry-0",
+      "domain": "equality",
+      "family": "symmetry",
+      "prefix": "{-# OPTIONS --without-K --exact-split #-}\nmodule Task where\n\ndata sfc07583ee4d2930c {s95be55768f00d73f : Set} (sec976a3ee8b35dcd : s95be55768f00d73f) : s95be55768f00d73f \u2192 Set where\n  sd67e60116d934ec3 : sfc07583ee4d2930c sec976a3ee8b35dcd sec976a3ee8b35dcd\n\ngoal : {s95be55768f00d73f : Set} {sec976a3ee8b35dcd s61308a5d971402e7 : s95be55768f00d73f} \u2192 sfc07583ee4d2930c sec976a3ee8b35dcd s61308a5d971402e7 \u2192 sfc07583ee4d2930c s61308a5d971402e7 sec976a3ee8b35dcd\n",
+      "starter": "goal = {!!}\n",
+      "reference": "goal sd67e60116d934ec3 = sd67e60116d934ec3\n"
+    },
+    {
+      "id": "transitivity-0",
+      "domain": "equality",
+      "family": "transitivity",
+      "prefix": "{-# OPTIONS --without-K --exact-split #-}\nmodule Task where\n\ndata s667963dadf9a1566 {s40232919892eaf04 : Set} (s0a99fe3d1d2cd7f0 : s40232919892eaf04) : s40232919892eaf04 \u2192 Set where\n  s6fee4bd83896c1ce : s667963dadf9a1566 s0a99fe3d1d2cd7f0 s0a99fe3d1d2cd7f0\n\ngoal : {s40232919892eaf04 : Set} {s0a99fe3d1d2cd7f0 s179a7d87b162f813 se83a16524541448c : s40232919892eaf04} \u2192 s667963dadf9a1566 s0a99fe3d1d2cd7f0 s179a7d87b162f813 \u2192 s667963dadf9a1566 s179a7d87b162f813 se83a16524541448c \u2192 s667963dadf9a1566 s0a99fe3d1d2cd7f0 se83a16524541448c\n",
+      "starter": "goal = {!!}\n",
+      "reference": "goal s6fee4bd83896c1ce s1a32be8d7ba31034 = s1a32be8d7ba31034\n"
+    },
+    {
+      "id": "congruence-0",
+      "domain": "equality",
+      "family": "congruence",
+      "prefix": "{-# OPTIONS --without-K --exact-split #-}\nmodule Task where\n\ndata s086422f37bd769fb {se19e628608fc5684 : Set} (se42e989afc70fc01 : se19e628608fc5684) : se19e628608fc5684 \u2192 Set where\n  s84dada344a73ecf1 : s086422f37bd769fb se42e989afc70fc01 se42e989afc70fc01\n\ngoal : {se19e628608fc5684 s5d562b8c661754ae : Set} (sec991a18de9fd0ca : se19e628608fc5684 \u2192 s5d562b8c661754ae) {se42e989afc70fc01 s798445f3afcdcebe : se19e628608fc5684} \u2192 s086422f37bd769fb se42e989afc70fc01 s798445f3afcdcebe \u2192 s086422f37bd769fb (sec991a18de9fd0ca se42e989afc70fc01) (sec991a18de9fd0ca s798445f3afcdcebe)\n",
+      "starter": "goal = {!!}\n",
+      "reference": "goal sec991a18de9fd0ca s84dada344a73ecf1 = s84dada344a73ecf1\n"
+    },
+    {
+      "id": "add-right-zero-0",
+      "domain": "induction",
+      "family": "add-right-zero",
+      "prefix": "{-# OPTIONS --without-K --exact-split #-}\nmodule Task where\n\ndata s1ec7ee8f295b0c5e {s794e5a9f74dd58e7 : Set} (sb43537bcd645625d : s794e5a9f74dd58e7) : s794e5a9f74dd58e7 \u2192 Set where\n  s0a2519aff08afa2f : s1ec7ee8f295b0c5e sb43537bcd645625d sb43537bcd645625d\n\n{-# BUILTIN EQUALITY s1ec7ee8f295b0c5e #-}\n\ndata s68155df37d547178 : Set where\n  sce4918f40dcf5807 : s68155df37d547178\n  s5ef0a88bc8b236fd : s68155df37d547178 \u2192 s68155df37d547178\n\ns709ad375b7022ac4 : s68155df37d547178 \u2192 s68155df37d547178 \u2192 s68155df37d547178\ns709ad375b7022ac4 sce4918f40dcf5807 s25e7e38fe35c5312 = s25e7e38fe35c5312\ns709ad375b7022ac4 (s5ef0a88bc8b236fd sa599327d2896d912) s25e7e38fe35c5312 = s5ef0a88bc8b236fd (s709ad375b7022ac4 sa599327d2896d912 s25e7e38fe35c5312)\n\ngoal : (s25e7e38fe35c5312 : s68155df37d547178) \u2192 s1ec7ee8f295b0c5e (s709ad375b7022ac4 s25e7e38fe35c5312 sce4918f40dcf5807) s25e7e38fe35c5312\n",
+      "starter": "goal = {!!}\n",
+      "reference": "goal sce4918f40dcf5807 = s0a2519aff08afa2f\ngoal (s5ef0a88bc8b236fd s25e7e38fe35c5312) rewrite goal s25e7e38fe35c5312 = s0a2519aff08afa2f\n"
+    },
+    {
+      "id": "add-right-succ-0",
+      "domain": "induction",
+      "family": "add-right-succ",
+      "prefix": "{-# OPTIONS --without-K --exact-split #-}\nmodule Task where\n\ndata s81acec8e4058b969 {s77eeae8d254d5b59 : Set} (s050697b325ba25fd : s77eeae8d254d5b59) : s77eeae8d254d5b59 \u2192 Set where\n  saaaebc19e141bbb9 : s81acec8e4058b969 s050697b325ba25fd s050697b325ba25fd\n\n{-# BUILTIN EQUALITY s81acec8e4058b969 #-}\n\ndata scd6d22158c75c1bb : Set where\n  s7a9c8904aa6c7d9c : scd6d22158c75c1bb\n  s0e6022ef33b87e72 : scd6d22158c75c1bb \u2192 scd6d22158c75c1bb\n\nsd5483957a2753b70 : scd6d22158c75c1bb \u2192 scd6d22158c75c1bb \u2192 scd6d22158c75c1bb\nsd5483957a2753b70 s7a9c8904aa6c7d9c saf1016c4ff55062a = saf1016c4ff55062a\nsd5483957a2753b70 (s0e6022ef33b87e72 sc4b7958fda55d629) saf1016c4ff55062a = s0e6022ef33b87e72 (sd5483957a2753b70 sc4b7958fda55d629 saf1016c4ff55062a)\n\ngoal : (sc4b7958fda55d629 saf1016c4ff55062a : scd6d22158c75c1bb) \u2192 s81acec8e4058b969 (sd5483957a2753b70 sc4b7958fda55d629 (s0e6022ef33b87e72 saf1016c4ff55062a)) (s0e6022ef33b87e72 (sd5483957a2753b70 sc4b7958fda55d629 saf1016c4ff55062a))\n",
+      "starter": "goal = {!!}\n",
+      "reference": "goal s7a9c8904aa6c7d9c saf1016c4ff55062a = saaaebc19e141bbb9\ngoal (s0e6022ef33b87e72 sc4b7958fda55d629) saf1016c4ff55062a rewrite goal sc4b7958fda55d629 saf1016c4ff55062a = saaaebc19e141bbb9\n"
+    },
+    {
+      "id": "add-associativity-0",
+      "domain": "induction",
+      "family": "add-associativity",
+      "prefix": "{-# OPTIONS --without-K --exact-split #-}\nmodule Task where\n\ndata s750a35462402c3aa {sa4930bd31e83c466 : Set} (se47ca8a1f8212539 : sa4930bd31e83c466) : sa4930bd31e83c466 \u2192 Set where\n  se7674dca07a82425 : s750a35462402c3aa se47ca8a1f8212539 se47ca8a1f8212539\n\n{-# BUILTIN EQUALITY s750a35462402c3aa #-}\n\ndata s48bc225e2d540485 : Set where\n  s4b909f100858ad58 : s48bc225e2d540485\n  s6c7298ee13659f90 : s48bc225e2d540485 \u2192 s48bc225e2d540485\n\nsaf969a5e8dc852de : s48bc225e2d540485 \u2192 s48bc225e2d540485 \u2192 s48bc225e2d540485\nsaf969a5e8dc852de s4b909f100858ad58 s4d825a99610c265b = s4d825a99610c265b\nsaf969a5e8dc852de (s6c7298ee13659f90 s11fb5686a751206c) s4d825a99610c265b = s6c7298ee13659f90 (saf969a5e8dc852de s11fb5686a751206c s4d825a99610c265b)\n\ngoal : (sf515d1dbb62d1b96 s9745b90accfd4127 sfa4e2137ecad9721 : s48bc225e2d540485) \u2192 s750a35462402c3aa (saf969a5e8dc852de (saf969a5e8dc852de sf515d1dbb62d1b96 s9745b90accfd4127) sfa4e2137ecad9721) (saf969a5e8dc852de sf515d1dbb62d1b96 (saf969a5e8dc852de s9745b90accfd4127 sfa4e2137ecad9721))\n",
+      "starter": "goal = {!!}\n",
+      "reference": "goal s4b909f100858ad58 s9745b90accfd4127 sfa4e2137ecad9721 = se7674dca07a82425\ngoal (s6c7298ee13659f90 sf515d1dbb62d1b96) s9745b90accfd4127 sfa4e2137ecad9721 rewrite goal sf515d1dbb62d1b96 s9745b90accfd4127 sfa4e2137ecad9721 = se7674dca07a82425\n"
+    },
+    {
+      "id": "append-right-unit-0",
+      "domain": "induction",
+      "family": "append-right-unit",
+      "prefix": "{-# OPTIONS --without-K --exact-split #-}\nmodule Task where\n\ndata s2dbb30e5df89608f {s9af2c3399805a52b : Set} (s75756d3f96ce992b : s9af2c3399805a52b) : s9af2c3399805a52b \u2192 Set where\n  sb5391f7c8ce608e2 : s2dbb30e5df89608f s75756d3f96ce992b s75756d3f96ce992b\n\n{-# BUILTIN EQUALITY s2dbb30e5df89608f #-}\n\ndata sb94bc0f7969cabb9 (s9af2c3399805a52b : Set) : Set where\n  s9f18726f5f27a77b : sb94bc0f7969cabb9 s9af2c3399805a52b\n  sdd985ca88641a1ef : s9af2c3399805a52b \u2192 sb94bc0f7969cabb9 s9af2c3399805a52b \u2192 sb94bc0f7969cabb9 s9af2c3399805a52b\n\ns698181b640ea8ec4 : {s9af2c3399805a52b : Set} \u2192 sb94bc0f7969cabb9 s9af2c3399805a52b \u2192 sb94bc0f7969cabb9 s9af2c3399805a52b \u2192 sb94bc0f7969cabb9 s9af2c3399805a52b\ns698181b640ea8ec4 s9f18726f5f27a77b s200ff568394ca5f4 = s200ff568394ca5f4\ns698181b640ea8ec4 (sdd985ca88641a1ef s75756d3f96ce992b s1184c27d9deadc73) s200ff568394ca5f4 = sdd985ca88641a1ef s75756d3f96ce992b (s698181b640ea8ec4 s1184c27d9deadc73 s200ff568394ca5f4)\n\ngoal : {s9af2c3399805a52b : Set} (s1184c27d9deadc73 : sb94bc0f7969cabb9 s9af2c3399805a52b) \u2192 s2dbb30e5df89608f (s698181b640ea8ec4 s1184c27d9deadc73 s9f18726f5f27a77b) s1184c27d9deadc73\n",
+      "starter": "goal = {!!}\n",
+      "reference": "goal s9f18726f5f27a77b = sb5391f7c8ce608e2\ngoal (sdd985ca88641a1ef s75756d3f96ce992b s1184c27d9deadc73) rewrite goal s1184c27d9deadc73 = sb5391f7c8ce608e2\n"
+    },
+    {
+      "id": "transport-0",
+      "domain": "dependent",
+      "family": "transport",
+      "prefix": "{-# OPTIONS --without-K --exact-split #-}\nmodule Task where\n\ndata sfc05120bb6e6c7fc {s976cfcc69bec20e3 : Set} (sd05dec0513c3d3b8 : s976cfcc69bec20e3) : s976cfcc69bec20e3 \u2192 Set where\n  s24360ae2ed1480e2 : sfc05120bb6e6c7fc sd05dec0513c3d3b8 sd05dec0513c3d3b8\n\ngoal : {s976cfcc69bec20e3 : Set} (s12188e0d8aa39171 : s976cfcc69bec20e3 \u2192 Set) {sd05dec0513c3d3b8 seaf89b3dfdc2aa7e : s976cfcc69bec20e3} \u2192 sfc05120bb6e6c7fc sd05dec0513c3d3b8 seaf89b3dfdc2aa7e \u2192 s12188e0d8aa39171 sd05dec0513c3d3b8 \u2192 s12188e0d8aa39171 seaf89b3dfdc2aa7e\n",
+      "starter": "goal = {!!}\n",
+      "reference": "goal s12188e0d8aa39171 s24360ae2ed1480e2 s7892bd1b89b6a23e = s7892bd1b89b6a23e\n"
+    },
+    {
+      "id": "sigma-map-0",
+      "domain": "dependent",
+      "family": "sigma-map",
+      "prefix": "{-# OPTIONS --without-K --exact-split #-}\nmodule Task where\n\nrecord s0ca58ef890d33dce (s3db164e6ee8da7f2 : Set) (sbdd4096159bc04ce : s3db164e6ee8da7f2 \u2192 Set) : Set where\n  constructor s93d21f6e9b8c5177\n  field\n    s4da303d0733e594f : s3db164e6ee8da7f2\n    s006e106e1a02f63b : sbdd4096159bc04ce s4da303d0733e594f\nopen s0ca58ef890d33dce\n\ngoal : {s3db164e6ee8da7f2 : Set} {sbdd4096159bc04ce sc4645a6d9c1a6f05 : s3db164e6ee8da7f2 \u2192 Set} \u2192 ((s66d9a8889b139949 : s3db164e6ee8da7f2) \u2192 sbdd4096159bc04ce s66d9a8889b139949 \u2192 sc4645a6d9c1a6f05 s66d9a8889b139949) \u2192 s0ca58ef890d33dce s3db164e6ee8da7f2 sbdd4096159bc04ce \u2192 s0ca58ef890d33dce s3db164e6ee8da7f2 sc4645a6d9c1a6f05\n",
+      "starter": "goal = {!!}\n",
+      "reference": "goal s3f5a2d29f8a4fb4f (s93d21f6e9b8c5177 s66d9a8889b139949 s3aad069b9f2570af) = s93d21f6e9b8c5177 s66d9a8889b139949 (s3f5a2d29f8a4fb4f s66d9a8889b139949 s3aad069b9f2570af)\n"
+    },
+    {
+      "id": "vector-map-0",
+      "domain": "dependent",
+      "family": "vector-map",
+      "prefix": "{-# OPTIONS --without-K --exact-split #-}\nmodule Task where\n\ndata s3646986049657b3f : Set where\n  s65069fe5443eed90 : s3646986049657b3f\n  s5ad788637a3110d2 : s3646986049657b3f \u2192 s3646986049657b3f\n\ns4258cfc2a70833e2 : s3646986049657b3f \u2192 s3646986049657b3f \u2192 s3646986049657b3f\ns4258cfc2a70833e2 s65069fe5443eed90 s5112a52728b2ce6f = s5112a52728b2ce6f\ns4258cfc2a70833e2 (s5ad788637a3110d2 sd7592a07ad1dec40) s5112a52728b2ce6f = s5ad788637a3110d2 (s4258cfc2a70833e2 sd7592a07ad1dec40 s5112a52728b2ce6f)\n\ndata s75461320e03626bb (s33de2faf93e05052 : Set) : s3646986049657b3f \u2192 Set where\n  s1ad6ce7d51e224e5 : s75461320e03626bb s33de2faf93e05052 s65069fe5443eed90\n  sdf6f179caaef53ce : {s5112a52728b2ce6f : s3646986049657b3f} \u2192 s33de2faf93e05052 \u2192 s75461320e03626bb s33de2faf93e05052 s5112a52728b2ce6f \u2192 s75461320e03626bb s33de2faf93e05052 (s5ad788637a3110d2 s5112a52728b2ce6f)\n\ngoal : {s33de2faf93e05052 s11e8d41d25453037 : Set} {s5112a52728b2ce6f : s3646986049657b3f} \u2192 (s33de2faf93e05052 \u2192 s11e8d41d25453037) \u2192 s75461320e03626bb s33de2faf93e05052 s5112a52728b2ce6f \u2192 s75461320e03626bb s11e8d41d25453037 s5112a52728b2ce6f\n",
+      "starter": "goal = {!!}\n",
+      "reference": "goal s01768a017c1fa756 s1ad6ce7d51e224e5 = s1ad6ce7d51e224e5\ngoal s01768a017c1fa756 (sdf6f179caaef53ce s15672f2c86773410 s1cd0e3a16ca33cd6) = sdf6f179caaef53ce (s01768a017c1fa756 s15672f2c86773410) (goal s01768a017c1fa756 s1cd0e3a16ca33cd6)\n"
+    },
+    {
+      "id": "vector-append-0",
+      "domain": "dependent",
+      "family": "vector-append",
+      "prefix": "{-# OPTIONS --without-K --exact-split #-}\nmodule Task where\n\ndata sae93e44f21d8ffa0 : Set where\n  sd450f2e6b2b7895e : sae93e44f21d8ffa0\n  s11f6e562bbf93881 : sae93e44f21d8ffa0 \u2192 sae93e44f21d8ffa0\n\nscf5ad7144c7f3965 : sae93e44f21d8ffa0 \u2192 sae93e44f21d8ffa0 \u2192 sae93e44f21d8ffa0\nscf5ad7144c7f3965 sd450f2e6b2b7895e sae0e8b5cbc11e364 = sae0e8b5cbc11e364\nscf5ad7144c7f3965 (s11f6e562bbf93881 s2d435001812b3f1a) sae0e8b5cbc11e364 = s11f6e562bbf93881 (scf5ad7144c7f3965 s2d435001812b3f1a sae0e8b5cbc11e364)\n\ndata s7d04110db438754f (s9f91e55c25a09b7f : Set) : sae93e44f21d8ffa0 \u2192 Set where\n  s641248df8a2aa3a2 : s7d04110db438754f s9f91e55c25a09b7f sd450f2e6b2b7895e\n  sce3995641401063e : {sae0e8b5cbc11e364 : sae93e44f21d8ffa0} \u2192 s9f91e55c25a09b7f \u2192 s7d04110db438754f s9f91e55c25a09b7f sae0e8b5cbc11e364 \u2192 s7d04110db438754f s9f91e55c25a09b7f (s11f6e562bbf93881 sae0e8b5cbc11e364)\n\ngoal : {s9f91e55c25a09b7f : Set} {s2d435001812b3f1a sae0e8b5cbc11e364 : sae93e44f21d8ffa0} \u2192 s7d04110db438754f s9f91e55c25a09b7f s2d435001812b3f1a \u2192 s7d04110db438754f s9f91e55c25a09b7f sae0e8b5cbc11e364 \u2192 s7d04110db438754f s9f91e55c25a09b7f (scf5ad7144c7f3965 s2d435001812b3f1a sae0e8b5cbc11e364)\n",
+      "starter": "goal = {!!}\n",
+      "reference": "goal s641248df8a2aa3a2 s7fd614fc5ee3366d = s7fd614fc5ee3366d\ngoal (sce3995641401063e sb83c65fafee55bd0 s34883c5d371cf6af) s7fd614fc5ee3366d = sce3995641401063e sb83c65fafee55bd0 (goal s34883c5d371cf6af s7fd614fc5ee3366d)\n"
+    }
+  ]
+}

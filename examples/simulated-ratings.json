@@ -1,0 +1,156 @@
+{
+  "schema_version": "portable-prover-rating.report.v1",
+  "method": "conditional-rasch-bt-v1",
+  "scale_id": "7efaf69f8aa955bf60663bbde837cb5abaf0b669b186b1549345c1343efdbe51",
+  "suite_id": "4af3854c74b78512195ac80dd25813b35bb42657e2fce845443df6e994b7d073",
+  "protocol": {
+    "track": "SIMULATION-v1",
+    "budget_seconds": 10.0,
+    "environment_id": "simulation",
+    "checker_id": "none-simulation",
+    "enforcement": "none-simulation",
+    "synthetic": true
+  },
+  "input_sha256": "5c85e70d96d55d1e0461acde8ea32e25b8546d92c90689aaff96393c932ed4c0",
+  "anchor": {
+    "id": "simulated-reference",
+    "revision": "simulation-v1"
+  },
+  "prior_sd_points": 800.0,
+  "family_count": 200,
+  "bootstrap": {
+    "draws": 200,
+    "seed": 7,
+    "disconnected_draws": 0,
+    "unit": "family within domain",
+    "intervals_available": true
+  },
+  "separation": false,
+  "warnings": [
+    "SIMULATED outcomes: these are not measurements of real provers."
+  ],
+  "ratings": [
+    {
+      "prover": "simulated-strong",
+      "rating": 1797.47,
+      "interval95": [
+        1729.79,
+        1859.03
+      ],
+      "anchor": false,
+      "balanced_solve_rate": 0.7133333333333335,
+      "solve_rate_by_domain": {
+        "dependent": 0.7400000000000002,
+        "equality": 0.6800000000000002,
+        "induction": 0.6733333333333335,
+        "logic": 0.7600000000000002
+      }
+    },
+    {
+      "prover": "simulated-reference",
+      "rating": 1500.0,
+      "interval95": [
+        1500.0,
+        1500.0
+      ],
+      "anchor": true,
+      "balanced_solve_rate": 0.4966666666666666,
+      "solve_rate_by_domain": {
+        "dependent": 0.5000000000000001,
+        "equality": 0.39999999999999986,
+        "induction": 0.5599999999999998,
+        "logic": 0.5266666666666666
+      }
+    },
+    {
+      "prover": "simulated-weak",
+      "rating": 1202.61,
+      "interval95": [
+        1130.9,
+        1253.57
+      ],
+      "anchor": false,
+      "balanced_solve_rate": 0.26499999999999996,
+      "solve_rate_by_domain": {
+        "dependent": 0.26666666666666666,
+        "equality": 0.2266666666666666,
+        "induction": 0.28666666666666657,
+        "logic": 0.2799999999999999
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "first": "simulated-reference",
+      "second": "simulated-strong",
+      "counts": {
+        "both_solved": 270,
+        "second_only": 158,
+        "both_failed": 144,
+        "first_only": 28
+      },
+      "difference": -297.47,
+      "difference_interval95": [
+        -359.03,
+        -229.79
+      ],
+      "model_first_only_given_discordance": 0.15285458352526246
+    },
+    {
+      "first": "simulated-reference",
+      "second": "simulated-weak",
+      "counts": {
+        "first_only": 169,
+        "second_only": 30,
+        "both_failed": 272,
+        "both_solved": 129
+      },
+      "difference": 297.39,
+      "difference_interval95": [
+        246.43,
+        369.1
+      ],
+      "model_first_only_given_discordance": 0.8470813438332946
+    },
+    {
+      "first": "simulated-strong",
+      "second": "simulated-weak",
+      "counts": {
+        "first_only": 278,
+        "both_solved": 150,
+        "both_failed": 163,
+        "second_only": 9
+      },
+      "difference": 594.86,
+      "difference_interval95": [
+        514.31,
+        664.45
+      ],
+      "model_first_only_given_discordance": 0.9684546644200157
+    }
+  ],
+  "pairwise_fit": [
+    {
+      "first": "simulated-reference",
+      "second": "simulated-strong",
+      "observed_first_only_fraction": 0.1505376344086021,
+      "predicted_first_only_fraction": 0.15285458352526246,
+      "effective_discordance_weight": 31.00000000000001
+    },
+    {
+      "first": "simulated-reference",
+      "second": "simulated-weak",
+      "observed_first_only_fraction": 0.8492462311557789,
+      "predicted_first_only_fraction": 0.8470813438332946,
+      "effective_discordance_weight": 33.166666666666686
+    },
+    {
+      "first": "simulated-strong",
+      "second": "simulated-weak",
+      "observed_first_only_fraction": 0.9686411149825784,
+      "predicted_first_only_fraction": 0.9684546644200157,
+      "effective_discordance_weight": 47.83333333333332
+    }
+  ],
+  "prior_sensitivity_max_shift_points": 1.543199798733046
+}
