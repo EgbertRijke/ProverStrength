@@ -49,9 +49,23 @@ The conditional Rasch/Bradley–Terry model compares which prover alone solves a
 matched task. Joint successes and joint failures remain coverage data, not
 relative wins. Separation is flagged and intervals are withheld; disconnected
 comparisons retain outcomes without inventing a rating.
-This original rating does not yet credit faster common successes; a
-resource-sensitive edition is being prepared. Recorded times and effort remain
-available, and historical scores will retain their original meaning.
+This original rating does not credit faster common successes. The separate
+[resource-sensitive report](resource-ratings.md) measures verified completion
+over declared time, action and checker-call ranges, including faster common
+successes. It reports separate 0–100 indices, not Elo points. Freeze its profile
+before running:
+
+```sh
+prover-strength run suite.json provers.json results.json \
+  --agda /absolute/path/to/agda --budget 60 --environment-id my-fixed-machine-v1 \
+  --resource-profile profile.json
+prover-strength resource-rate results.json --profile profile.json \
+  --reference reference-v1 --output resources.json --markdown resources.md
+```
+
+The profile format and uncertainty rules are in the linked specification.
+The hosted campaign still uses the original rating edition; historical scores
+are not recomputed by this new command.
 
 The public chart shows each participating prover's rating over time, followed
 by its recorded results. Dates and rating axes scale automatically as results

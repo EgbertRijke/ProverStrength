@@ -7,6 +7,8 @@ import json
 import math
 from typing import Any
 
+from .effort import validate_effort
+
 SCHEMA = "portable-prover-rating.results.v1"
 STATUSES = {
     "verified",
@@ -104,6 +106,12 @@ def validate(data: dict[str, Any]) -> None:
             raise ValueError(
                 f"unscored status: {row['status']}; resolve harness errors first"
             )
+        if row.get("effort") is not None:
+            validate_effort(row["effort"])
+        if "evaluator_checks" in row and (
+            type(row["evaluator_checks"]) is not int or row["evaluator_checks"] < 0
+        ):
+            raise ValueError("evaluator checks must be a nonnegative integer")
         elapsed = row["elapsed_seconds"]
         if (
             type(elapsed) not in (float, int)

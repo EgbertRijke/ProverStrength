@@ -109,6 +109,27 @@ def main(argv: list[str] | None = None) -> int:
     run_parser.add_argument("--artifacts", type=Path)
     run_parser.add_argument("--reference-budget", type=float, default=60)
     run_parser.add_argument("--max-output-bytes", type=int, default=MAX_OUTPUT)
+    run_parser.add_argument(
+        "--resource-profile",
+        type=Path,
+        help="freeze resource-sensitive measurement ranges before execution",
+    )
+    resource = commands.add_parser(
+        "resource-rate",
+        help="measure verified completion time and effort, including common successes",
+    )
+    resource.add_argument("results", nargs="+", type=Path)
+    resource.add_argument("--profile", type=Path, required=True)
+    resource.add_argument("--reference")
+    resource.add_argument("--output", type=Path, required=True)
+    resource.add_argument("--markdown", type=Path)
+    resource.add_argument("--bootstrap", type=int, default=200)
+    resource.add_argument("--seed", type=int, default=0)
+    resource.add_argument(
+        "--retrospective",
+        action="store_true",
+        help="explicitly permit old observations without a pre-recorded resource profile",
+    )
     rating = commands.add_parser(
         "rate", help="fit matched results from any conforming evaluator"
     )
@@ -153,7 +174,26 @@ def main(argv: list[str] | None = None) -> int:
     pending.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
     try:
-        if args.command == "measure-pending":
+        if args.command == "resource-rate":
+            from .resources import markdown as resource_markdown
+            from .resources import resource_report
+
+            data = merge(
+                [json.loads(p.read_text(encoding="utf-8")) for p in args.results]
+            )
+            report = resource_report(
+                data,
+                json.loads(args.profile.read_text(encoding="utf-8")),
+                reference=args.reference,
+                bootstrap=args.bootstrap,
+                seed=args.seed,
+                retrospective=args.retrospective,
+            )
+            save(args.output, report)
+            if args.markdown:
+                args.markdown.parent.mkdir(parents=True, exist_ok=True)
+                args.markdown.write_text(resource_markdown(report), encoding="utf-8")
+        elif args.command == "measure-pending":
             from .commits import measure_pending
 
             batch = measure_pending(
@@ -231,6 +271,11 @@ def main(argv: list[str] | None = None) -> int:
                     order_seed=args.order_seed,
                     reference_budget=args.reference_budget,
                     max_output=args.max_output_bytes,
+                    resource_profile=json.loads(
+                        args.resource_profile.read_text(encoding="utf-8")
+                    )
+                    if args.resource_profile
+                    else None,
                 )
                 save(args.output, result)
     except (

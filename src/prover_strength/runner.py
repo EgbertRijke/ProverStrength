@@ -21,7 +21,9 @@ from typing import Any
 from . import projects
 from .adapters import agdaprover_candidate
 from .data import SCHEMA, digest, identifier, positive, validate
+from .effort import reported_effort
 from .process import MAX_OUTPUT, HarnessError, OutputLimitError, process
+from .resources import validate_profile
 from .tasks import HEADER, suite_metadata
 
 FORBIDDEN = re.compile(r"\b(import|postulate|primitive|unquoteDecl|unquoteDef)\b|\{-#")
@@ -181,10 +183,13 @@ def run(
     order_seed: int = 0,
     reference_budget: float = 60,
     max_output: int = MAX_OUTPUT,
+    resource_profile: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     if os.name != "posix":
         raise HarnessError("local process-group supervision requires POSIX")
     positive(budget, "budget")
+    if resource_profile is not None:
+        validate_profile(resource_profile, wall_budget=budget)
     positive(reference_budget, "reference_budget")
     if type(max_output) is not int or max_output <= 0:
         raise ValueError("output budget must be a positive integer")
@@ -241,6 +246,8 @@ def run(
         "cpu_count": os.cpu_count(),
         "suite_role": suite.get("role", "unclassified"),
     }
+    if resource_profile is not None:
+        protocol["resource_profile"] = resource_profile
     artifacts.mkdir(parents=True, exist_ok=False)
     manifest = {
         "schema_version": "prover-strength.run-manifest.v1",
@@ -272,6 +279,8 @@ def run(
             "seed": seed,
             "status": "unsolved",
             "checker_accepted": False,
+            "effort": None,
+            "evaluator_checks": 0,
         }
         artifact_id = digest([prover["id"], task["id"], seed])[:24]
         log: dict[str, Any] = {}
@@ -308,6 +317,7 @@ def run(
                     payload = json.loads(out)
                     if not isinstance(payload, dict):
                         raise ValueError("worker JSON must be an object")
+                    row["effort"] = reported_effort(payload, prover["adapter"])
                     candidate = candidate_from_result(
                         payload, original, prover["adapter"]
                     )
@@ -318,6 +328,7 @@ def run(
                             row["status"] = "crash"
                     else:
                         validate_candidate(task, candidate)
+                        row["evaluator_checks"] += 1
                         accepted, diagnostic = check_source(
                             candidate,
                             agda,

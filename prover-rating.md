@@ -39,8 +39,11 @@ budgets must have different track or protocol identifiers.
 This is the original, single-cutoff rating edition. It does **not** credit a
 faster completion when both contestants finish within the cutoff. Runtime,
 search actions and checker calls are retained evidence, but do not currently
-enter this fitted score. A resource-sensitive edition is being prepared;
-historical ratings keep their original meaning and will not be silently changed.
+enter this fitted score. The separate [resource-sensitive completion report](resource-ratings.md)
+now credits those differences through explicitly declared resource ranges and
+independent effort axes. It is a bounded index, not this Elo-like fitted model.
+Historical ratings keep their original meaning and will not be silently changed;
+the hosted campaign has not yet migrated.
 
 Every contestant attempts the same tasks under the same protocol. For task
 variant and trial t, set X_pt = 1 exactly when prover p's completed artifact is
