@@ -41,7 +41,7 @@ This is a trusted-local POSIX runner, **not a hostile-code sandbox**. It provide
 process-group wall and output supervision; competition-wide CPU, memory,
 filesystem and network isolation require an external supervisor. Reference
 solutions must be inaccessible to contestants in an adversarial competition.
-The initial hosted campaign measures only the owner's trusted product commits.
+The initial hosted campaign measures only the owner's trusted AgdaProver commits.
 
 ## Ratings and commit history
 
@@ -52,8 +52,11 @@ comparisons retain outcomes without inventing a rating.
 This original rating does not credit faster common successes. The separate
 [resource-sensitive report](resource-ratings.md) measures verified completion
 over declared time, action and checker-call ranges, including faster common
-successes. It reports separate 0–100 indices, not Elo points. Freeze its profile
-before running:
+successes. An NNUE update can therefore change search effort without changing
+the original rating. Use the resource-sensitive report to examine those changes;
+it reports separate 0–100 indices, not Elo points. Neither a training update nor
+lower training loss guarantees a stronger measured prover. Freeze the resource
+profile before running:
 
 ```sh
 prover-strength run suite.json provers.json results.json \
@@ -73,7 +76,7 @@ arrive. New features and ranking changes remain part of the same prover's
 history. Local measurements remain private. Ratings are provisional, not a
 calibrated universal scale; a finite task bank will eventually saturate.
 
-The scheduled workflow checks for new first-parent product commits twice an
+The scheduled workflow checks for new first-parent AgdaProver commits twice an
 hour and measures at most two per batch. Delayed jobs catch up without silently
 skipping intermediate commits. Existing completed observations are not rerun;
 interrupted or broken evaluations remain explicitly unresolved. GitHub can delay
@@ -84,8 +87,8 @@ Campaigns, queue receipts and immutable evidence live on the
 [`results` branch](https://github.com/EgbertRijke/ProverStrength/tree/results).
 Each campaign pins the evaluator, bank, participant commands and resources.
 The active AgdaProver campaign uses NNUE with the weights bundled in each
-measured product commit, starting at `eaabbc5`. No local training checkout or
-custom model path is needed. The frozen product snapshot records the model
+measured AgdaProver commit, starting at `eaabbc5`. No local training checkout or
+custom model path is needed. The frozen AgdaProver snapshot records the model
 files and their hashes. Earlier symbolic-only measurements remain unchanged
 in the same AgdaProver history, with their original settings preserved in the
 records; they do not measure the bundled NNUE.
@@ -141,13 +144,13 @@ are reused within the same campaign, toolchain and controller edition.
 ## Development and provenance
 
 Feature tests, generators, experiments and historical fixtures belong in
-`agda-prover-dev/prover-strength-dev/`, not the product package. Product CI checks
+`agda-prover-dev/prover-strength-dev/`, not the ProverStrength package. Package CI checks
 installation, types and lint; development CI runs the external feature tests.
 Neither compiles Agda. Published rating data stays on the separate data branch.
 
 The supplied preliminary bundle remains recoverable at commit `936d830`.
-Its statistical implementation is the starting point of this product; historical
-smoke output is not current or independently calibrated evidence.
+Its statistical implementation is the starting point of ProverStrength;
+historical preliminary output is not current or independently calibrated evidence.
 
 Code is licensed under [GPL-3.0-or-later](LICENSE). Rasch and Bradley–Terry
 methods are attributed in the protocol.
