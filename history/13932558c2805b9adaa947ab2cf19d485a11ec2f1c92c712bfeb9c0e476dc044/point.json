@@ -1,0 +1,147 @@
+{
+  "schema_version": "prover-strength.history-point.v1",
+  "id": "13932558c2805b9adaa947ab2cf19d485a11ec2f1c92c712bfeb9c0e476dc044",
+  "series_id": "5d97c195d38a320c5e44319db46b0ba17c73d4d2dc869d3669d5fdfdac0aa444",
+  "series": {
+    "suite_id": "babcb1ffeba51025e8351a275fe1b2a0cbf809c8af0f6938e097a7e901e40500",
+    "protocol": {
+      "track": "agda-intensional-without-K-exact-split-v1",
+      "budget_seconds": 10,
+      "environment_id": "github-ubuntu2404-x64-python311-v1",
+      "checker_id": "agda-2.8.0-sha256:d4be55933c4120006c67b110f1db6c46f86ba6ad444fa7048a0fe95ad8f1a3af",
+      "checker_flags": [
+        "--safe",
+        "--without-K",
+        "--exact-split",
+        "--no-libraries",
+        "--no-default-libraries",
+        "--ignore-all-interfaces"
+      ],
+      "enforcement": "local-wall-stream-bounded-process-group-v2",
+      "max_output_bytes": 16777216,
+      "reference_check_budget_seconds": 60,
+      "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+      "machine": "x86_64",
+      "cpu_count": 4,
+      "suite_role": "public-smoke-only"
+    },
+    "profile": {
+      "ranker": "nnue",
+      "search": "deep",
+      "model": null,
+      "action_model": null,
+      "or_model": null,
+      "model_selection": "bundled-per-product-commit",
+      "budget_seconds": 10,
+      "max_candidates": 8000,
+      "seeds": [
+        0
+      ],
+      "order_seed": 0,
+      "max_output_bytes": 16777216,
+      "reference_check_budget_seconds": 60
+    },
+    "environment": {
+      "id": "github-ubuntu2404-x64-python311-v1",
+      "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+      "python": "3.11.16 (main, Aug 13 2026, 02:46:14) [GCC 13.3.0]",
+      "python_sha256": "a15ccdaf07655a8667a3687b13171486c9a265d92273ba3ad820fbb64d2cfecc",
+      "machine": "x86_64",
+      "cpu_count": 4,
+      "network": "linux-network-namespace-offline",
+      "workers": 1,
+      "python_hash_seed": 0,
+      "product_environment_overrides": {},
+      "site_packages": "disabled in workers",
+      "cache_policy": "fresh task/check directories; immutable sources; installed Agda builtins",
+      "locale": "C.UTF-8"
+    },
+    "evaluator_tree": "9649a72a293b66e69aaa597e2f6436f178e77e6d",
+    "target_command": {
+      "adapter": "agdaprover",
+      "argv": [
+        "/opt/hostedtoolcache/Python/3.11.16/x64/bin/python3.11",
+        "-B",
+        "-S",
+        "-c",
+        "import sys; sys.path.insert(0, '$PRODUCT/src'); from agdaprover.cli import main; raise SystemExit(main())",
+        "prove-prefix",
+        "{source}",
+        "--agda",
+        "{agda}",
+        "--deep",
+        "--ranker",
+        "nnue",
+        "--timeout",
+        "{budget}"
+      ],
+      "executable_sha256": "a15ccdaf07655a8667a3687b13171486c9a265d92273ba3ad820fbb64d2cfecc"
+    },
+    "reference_panel": [
+      {
+        "id": "lambda-baseline-v1",
+        "revision": "25024ccf30f77fd661e78abe1689564b937bd9f2",
+        "adapter": "candidate-json",
+        "argv": [
+          "/opt/hostedtoolcache/Python/3.11.16/x64/bin/python3.11",
+          "-B",
+          "-S",
+          "-c",
+          "import sys; sys.path.insert(0, '$EVALUATOR/src'); from prover_strength.cli import main; raise SystemExit(main())",
+          "baseline",
+          "{source}",
+          "--agda",
+          "{agda}",
+          "--budget",
+          "{budget}"
+        ],
+        "executable_sha256": "a15ccdaf07655a8667a3687b13171486c9a265d92273ba3ad820fbb64d2cfecc"
+      }
+    ],
+    "method": "conditional-rasch-bt-v1",
+    "prior_sd_points": 800.0
+  },
+  "product_commit": "ea142c2e673be4b0a0fd9b253695ce4013870621",
+  "evaluator_commit": "25024ccf30f77fd661e78abe1689564b937bd9f2",
+  "measured_at": "2026-09-11T18:41:12.654717+00:00",
+  "status": "measured",
+  "solved": 11,
+  "total": 16,
+  "outcomes": {
+    "verified": 11,
+    "timeout": 5
+  },
+  "balanced_solve_rate": 0.6875,
+  "solve_rate_by_domain": {
+    "dependent": 0.75,
+    "equality": 1.0,
+    "induction": 0.0,
+    "logic": 1.0
+  },
+  "provisional_rating": 2138.23,
+  "rating_interval95": null,
+  "prior_dependent": true,
+  "warnings": [
+    "Small family sample: ratings are provisional; renamed tasks are not new families.",
+    "Complete/quasi separation: finite ratings depend on the prior; intervals withheld."
+  ],
+  "effort": {
+    "accounting": "agdaprover.p0.v1-self-reported",
+    "assigned_trials": 16,
+    "cpu_seconds": null,
+    "actions_expanded": {
+      "observed": 76,
+      "known_trials": 11,
+      "unknown_trials": 5,
+      "total": null
+    },
+    "verifier_calls": {
+      "observed": 80,
+      "known_trials": 11,
+      "unknown_trials": 5,
+      "total": null
+    },
+    "proofs_per_1000_actions": null
+  },
+  "results_sha256": "bb9d82ccbcbcaf7a4f8da117a6c1ac70be664afbe106e4819a970e0dd132b5f5"
+}
