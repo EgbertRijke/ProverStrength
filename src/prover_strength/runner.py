@@ -18,6 +18,7 @@ import time
 from pathlib import Path
 from typing import Any
 
+from . import projects
 from .adapters import agdaprover_candidate
 from .data import SCHEMA, digest, identifier, positive, validate
 from .process import MAX_OUTPUT, HarnessError, OutputLimitError, process
@@ -38,7 +39,10 @@ def executable(command: str) -> str:
     found = shutil.which(command)
     if not found:
         raise HarnessError(f"executable not found: {command}")
-    return str(Path(found).resolve())
+    # Invocation paths can select environments (notably a venv's Python).
+    # Hashing still follows the file, but resolving this symlink before exec
+    # would silently replace the requested runtime with the system one.
+    return os.path.abspath(found)
 
 
 def file_sha256(path: str) -> str:
@@ -47,13 +51,23 @@ def file_sha256(path: str) -> str:
 
 
 def check_source(
-    source: str, agda: str, seconds: float, *, max_output: int = MAX_OUTPUT
+    source: str,
+    agda: str,
+    seconds: float,
+    *,
+    max_output: int = MAX_OUTPUT,
+    task: dict[str, Any] | None = None,
 ) -> tuple[bool, str]:
     with tempfile.TemporaryDirectory(prefix="ppr-check-") as directory:
         root = Path(directory)
-        (root / "Task.agda").write_text(source, encoding="utf-8")
+        if task is not None and "project" in task:
+            projects.materialize(task, source, root)
+            arguments = projects.checker_arguments(task, root)
+        else:
+            (root / "Task.agda").write_text(source, encoding="utf-8")
+            arguments = [*CHECK_FLAGS, "-i", str(root), "Task.agda"]
         code, out, err = process(
-            [agda, *CHECK_FLAGS, "-i", str(root), "Task.agda"],
+            [agda, *arguments],
             root,
             seconds,
             max_output=max_output,
@@ -76,31 +90,49 @@ def validate_suite(
     max_output: int = MAX_OUTPUT,
 ) -> None:
     positive(reference_budget, "reference_budget")
-    if suite.get("schema_version") != "portable-prover-rating.suite.v1":
+    if suite.get("schema_version") not in {
+        "portable-prover-rating.suite.v1",
+        projects.SCHEMA,
+    }:
         raise ValueError("unsupported suite schema")
     identifier(suite["track"], "track")
     if not suite["tasks"]:
         raise ValueError("empty suite")
     seen = set()
-    for task in suite["tasks"]:
+    tasks = projects.bind_tasks(suite)
+    if suite.get("schema_version") == projects.SCHEMA:
+        code, version, _ = process(
+            [agda, "--numeric-version"], Path.cwd(), reference_budget
+        )
+        if code or version.strip() != suite["agda_version"]:
+            raise HarnessError("project bank requires its pinned Agda version")
+    for task in tasks:
         for key in ("id", "domain", "family", "prefix", "starter", "reference"):
             identifier(task[key], key)
         if task["id"] in seen:
             raise ValueError("duplicate task id")
         seen.add(task["id"])
         prefix = task["prefix"]
-        if not prefix.startswith(HEADER) or not prefix.endswith("\n"):
+        if "project" not in task and (
+            not prefix.startswith(HEADER) or not prefix.endswith("\n")
+        ):
             raise ValueError("portable Agda tasks require the fixed Task module header")
         remaining = re.sub(
             r"\{-# BUILTIN EQUALITY [A-Za-z0-9]+ #-\}", "", prefix[len(HEADER) :]
         )
-        if FORBIDDEN.search(remaining) or FORBIDDEN.search(task["starter"]):
+        if ("project" not in task and FORBIDDEN.search(remaining)) or FORBIDDEN.search(
+            task["starter"]
+        ):
             raise ValueError("task uses imports, assumptions, or unapproved pragmas")
-        if not re.search(r"^goal\s*:", prefix, re.MULTILINE):
+        if "project" not in task and not re.search(r"^goal\s*:", prefix, re.MULTILINE):
             raise ValueError("task must fix the type of goal in its prefix")
         validate_candidate(task, prefix + task["reference"])
         accepted, diagnostic = check_source(
-            prefix + task["reference"], agda, reference_budget, max_output=max_output
+            prefix + task["reference"],
+            agda,
+            reference_budget,
+            max_output=max_output,
+            task=task,
         )
         if not accepted:
             raise HarnessError(f"invalid reference for {task['id']}: {diagnostic}")
@@ -198,7 +230,9 @@ def run(
         "budget_seconds": budget,
         "environment_id": environment_id,
         "checker_id": f"agda-{version.strip()}-sha256:{agda_hash}",
-        "checker_flags": CHECK_FLAGS,
+        "checker_flags": projects.FLAGS
+        if suite.get("schema_version") == projects.SCHEMA
+        else CHECK_FLAGS,
         "enforcement": "local-wall-stream-bounded-process-group-v2",
         "max_output_bytes": max_output,
         "reference_check_budget_seconds": reference_budget,
@@ -221,8 +255,13 @@ def run(
         json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
     # Full reference solutions remain with the evaluator. A worker receives
-    # only Task.agda, never the suite JSON or its reference bodies.
-    jobs = [(p, t, seed) for t in suite["tasks"] for seed in seeds for p in provers]
+    # only its open entry and fixed context, never the bank or reference bodies.
+    jobs = [
+        (p, t, seed)
+        for t in projects.bind_tasks(suite)
+        for seed in seeds
+        for p in provers
+    ]
     random.Random(order_seed).shuffle(jobs)
     rows: list[dict[str, Any]] = []
     for prover, task, seed in jobs:
@@ -239,9 +278,12 @@ def run(
         try:
             with tempfile.TemporaryDirectory(prefix="ppr-task-") as directory:
                 root = Path(directory)
-                source_file = root / "Task.agda"
                 original = task["prefix"] + task["starter"]
-                source_file.write_text(original, encoding="utf-8")
+                if "project" in task:
+                    source_file = projects.materialize(task, original, root)
+                else:
+                    source_file = root / "Task.agda"
+                    source_file.write_text(original, encoding="utf-8")
                 replacements = {
                     "{source}": str(source_file),
                     "{budget}": str(budget),
@@ -260,6 +302,8 @@ def run(
                     max_output=max_output,
                 )
                 log.update(argv=argv, exit_code=code, stdout=out, stderr=err)
+                if "project" in task and not projects.unchanged(task, original, root):
+                    raise HarnessError("contestant changed immutable project sources")
                 try:
                     payload = json.loads(out)
                     if not isinstance(payload, dict):
@@ -279,6 +323,7 @@ def run(
                             agda,
                             budget - (time.monotonic() - started),
                             max_output=max_output,
+                            task=task,
                         )
                         log["checker_diagnostic"] = diagnostic
                         elapsed = time.monotonic() - started

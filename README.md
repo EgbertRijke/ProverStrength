@@ -18,7 +18,9 @@ prover-strength rate results.json --anchor reference-v1 \
 ```
 
 Supply a task bank and contestant configuration as described in
-[the rating protocol](prover-rating.md). The package has no Python dependencies
+[the rating protocol](prover-rating.md). Banks can contain self-contained tasks
+or [source-only library tasks](project-suites.md) with fixed imported context.
+The package has no Python dependencies
 and imports no prover code. The command alias `agda-prover-rating` remains
 available. An accepted proof counts only after independent fresh Agda checking
 of the original goal.
@@ -47,6 +49,9 @@ The conditional Rasch/Bradley–Terry model compares which prover alone solves a
 matched task. Joint successes and joint failures remain coverage data, not
 relative wins. Separation is flagged and intervals are withheld; disconnected
 comparisons retain outcomes without inventing a rating.
+This original rating does not yet credit faster common successes; a
+resource-sensitive edition is being prepared. Recorded times and effort remain
+available, and historical scores will retain their original meaning.
 
 The public chart shows each participating prover's rating over time, followed
 by its recorded results. Dates and rating axes scale automatically as results

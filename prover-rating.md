@@ -36,6 +36,12 @@ budgets must have different track or protocol identifiers.
 
 ## The rating model
 
+This is the original, single-cutoff rating edition. It does **not** credit a
+faster completion when both contestants finish within the cutoff. Runtime,
+search actions and checker calls are retained evidence, but do not currently
+enter this fitted score. A resource-sensitive edition is being prepared;
+historical ratings keep their original meaning and will not be silently changed.
+
 Every contestant attempts the same tasks under the same protocol. For task
 variant and trial t, set X_pt = 1 exactly when prover p's completed artifact is
 independently accepted within budget, and 0 otherwise.
