@@ -1,0 +1,113 @@
+{
+  "schema_version": "portable-prover-rating.report.v1",
+  "method": "conditional-rasch-bt-v1",
+  "scale_id": "8a4a5bd987dc10bd580766ac0d215922ce1c5ca693d228ce19e20942521787cd",
+  "suite_id": "babcb1ffeba51025e8351a275fe1b2a0cbf809c8af0f6938e097a7e901e40500",
+  "protocol": {
+    "track": "agda-intensional-without-K-exact-split-v1",
+    "budget_seconds": 10,
+    "environment_id": "github-ubuntu2404-x64-python311-v1",
+    "checker_id": "agda-2.8.0-sha256:d4be55933c4120006c67b110f1db6c46f86ba6ad444fa7048a0fe95ad8f1a3af",
+    "checker_flags": [
+      "--safe",
+      "--without-K",
+      "--exact-split",
+      "--no-libraries",
+      "--no-default-libraries",
+      "--ignore-all-interfaces"
+    ],
+    "enforcement": "local-wall-stream-bounded-process-group-v2",
+    "max_output_bytes": 16777216,
+    "reference_check_budget_seconds": 60,
+    "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "cpu_count": 4,
+    "suite_role": "public-smoke-only"
+  },
+  "input_sha256": "c426e82e408a96cf14ddfc258f395ed67922d3344bffb1531a1c779ddd175de5",
+  "anchor": {
+    "id": "lambda-baseline-v1",
+    "revision": "25024ccf30f77fd661e78abe1689564b937bd9f2",
+    "adapter": "candidate-json",
+    "argv": [
+      "/opt/hostedtoolcache/Python/3.11.16/x64/bin/python3.11",
+      "-B",
+      "-S",
+      "-c",
+      "import sys; sys.path.insert(0, '/home/runner/work/ProverStrength/ProverStrength/queue/7f301d7cb534cd04d1ae620e2cb62a7acc44f4519983f94896c2f55c042c2aeb/1fa51585263a4192945caba070f70432653bb2a9/evaluator/src'); from prover_strength.cli import main; raise SystemExit(main())",
+      "baseline",
+      "{source}",
+      "--agda",
+      "{agda}",
+      "--budget",
+      "{budget}"
+    ],
+    "executable_sha256": "a15ccdaf07655a8667a3687b13171486c9a265d92273ba3ad820fbb64d2cfecc"
+  },
+  "prior_sd_points": 800.0,
+  "family_count": 16,
+  "bootstrap": {
+    "draws": 200,
+    "seed": 0,
+    "disconnected_draws": 0,
+    "unit": "family within domain",
+    "intervals_available": false
+  },
+  "separation": true,
+  "warnings": [
+    "Small family sample: ratings are provisional; renamed tasks are not new families.",
+    "Complete/quasi separation: finite ratings depend on the prior; intervals withheld."
+  ],
+  "ratings": [
+    {
+      "prover": "AgdaProver-nnue-deep",
+      "rating": 2138.23,
+      "interval95": null,
+      "anchor": false,
+      "balanced_solve_rate": 0.6875,
+      "solve_rate_by_domain": {
+        "dependent": 0.75,
+        "equality": 1.0,
+        "induction": 0.0,
+        "logic": 1.0
+      }
+    },
+    {
+      "prover": "lambda-baseline-v1",
+      "rating": 1500.0,
+      "interval95": null,
+      "anchor": true,
+      "balanced_solve_rate": 0.25,
+      "solve_rate_by_domain": {
+        "dependent": 0.0,
+        "equality": 0.0,
+        "induction": 0.0,
+        "logic": 1.0
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "first": "AgdaProver-nnue-deep",
+      "second": "lambda-baseline-v1",
+      "counts": {
+        "both_failed": 5,
+        "both_solved": 4,
+        "first_only": 7
+      },
+      "difference": 638.23,
+      "difference_interval95": null,
+      "model_first_only_given_discordance": 0.9752518275952051
+    }
+  ],
+  "pairwise_fit": [
+    {
+      "first": "AgdaProver-nnue-deep",
+      "second": "lambda-baseline-v1",
+      "observed_first_only_fraction": 1.0,
+      "predicted_first_only_fraction": 0.9752518275952051,
+      "effective_discordance_weight": 7.0
+    }
+  ],
+  "prior_sensitivity_max_shift_points": 197.02763123645727
+}
