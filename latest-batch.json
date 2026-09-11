@@ -3,14 +3,16 @@
   "campaign": "7f301d7cb534cd04d1ae620e2cb62a7acc44f4519983f94896c2f55c042c2aeb",
   "eligible": [
     "eaabbc5a0ba80ef7254833ab84375fcfb5c5daaf",
-    "7e9ef94d8c3e160769bb6a1eb89de4904366cc19"
+    "7e9ef94d8c3e160769bb6a1eb89de4904366cc19",
+    "02abdbf134fc46827f13a60a8533bf0a60036a71"
   ],
   "attempted": [
-    "7e9ef94d8c3e160769bb6a1eb89de4904366cc19"
+    "02abdbf134fc46827f13a60a8533bf0a60036a71"
   ],
   "completed": [
     "eaabbc5a0ba80ef7254833ab84375fcfb5c5daaf",
-    "7e9ef94d8c3e160769bb6a1eb89de4904366cc19"
+    "7e9ef94d8c3e160769bb6a1eb89de4904366cc19",
+    "02abdbf134fc46827f13a60a8533bf0a60036a71"
   ],
   "unresolved": [],
   "pending": []
