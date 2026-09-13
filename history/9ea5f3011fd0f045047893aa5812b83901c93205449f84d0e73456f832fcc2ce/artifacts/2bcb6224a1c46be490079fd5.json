@@ -1,0 +1,18 @@
+{
+  "argv": [
+    "/opt/hostedtoolcache/Python/3.11.16/x64/bin/python3.11",
+    "-B",
+    "-S",
+    "-c",
+    "import sys; sys.path.insert(0, '/home/runner/work/ProverStrength/ProverStrength/queue/7f301d7cb534cd04d1ae620e2cb62a7acc44f4519983f94896c2f55c042c2aeb/2824fdac98a308a73c92bb19a0c8f7331bcf4e7e/evaluator/src'); from prover_strength.cli import main; raise SystemExit(main())",
+    "baseline",
+    "/tmp/ppr-task-zh10bmsk/Task.agda",
+    "--agda",
+    "/home/runner/work/_temp/agdaprover-toolchain/agda",
+    "--budget",
+    "10"
+  ],
+  "exit_code": 0,
+  "stdout": "{\"candidate\": null}\n",
+  "stderr": ""
+}
