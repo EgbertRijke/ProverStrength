@@ -1,6 +1,6 @@
 {
   "schema_version": "prover-strength.commit-batch.v1",
-  "campaign": "145ebf00a774aad42d7ac87460e0ae2ed05b48574a18fae52f735cb192bc2d32",
+  "campaign": "7f301d7cb534cd04d1ae620e2cb62a7acc44f4519983f94896c2f55c042c2aeb",
   "eligible": [
     "eaabbc5a0ba80ef7254833ab84375fcfb5c5daaf",
     "7e9ef94d8c3e160769bb6a1eb89de4904366cc19",
@@ -150,20 +150,14 @@
     "9468b330c7c58c72b27ec1875907ba09a58cb24e",
     "e441fd7359b7b4f629b6bdf53601a41775727a75"
   ],
-  "attempted": [
-    "a853f73c961619692b3f55e349b2b1744b0259ec",
-    "e74949a6fdacf9fa032a880ac3fa3c75e3244c41"
-  ],
+  "attempted": [],
   "completed": [
     "eaabbc5a0ba80ef7254833ab84375fcfb5c5daaf",
     "7e9ef94d8c3e160769bb6a1eb89de4904366cc19",
     "02abdbf134fc46827f13a60a8533bf0a60036a71",
     "740b77a3030f5f2d0134ec90af63b9fed2380a5e",
     "a853f73c961619692b3f55e349b2b1744b0259ec",
-    "e74949a6fdacf9fa032a880ac3fa3c75e3244c41"
-  ],
-  "unresolved": [],
-  "pending": [
+    "e74949a6fdacf9fa032a880ac3fa3c75e3244c41",
     "69a38b5d2614b8878a8499c52e9b92b391db6d33",
     "1fa51585263a4192945caba070f70432653bb2a9",
     "739e4e5465a23a371560f8cbabaf7aa71badea92",
@@ -305,5 +299,7 @@
     "3520beeb64e2d5e3104afaf007e2e4e966253581",
     "9468b330c7c58c72b27ec1875907ba09a58cb24e",
     "e441fd7359b7b4f629b6bdf53601a41775727a75"
-  ]
+  ],
+  "unresolved": [],
+  "pending": []
 }
