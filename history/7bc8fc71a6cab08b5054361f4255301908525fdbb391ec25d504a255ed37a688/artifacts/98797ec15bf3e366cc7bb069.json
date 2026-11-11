@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "/opt/hostedtoolcache/Python/3.11.18/x64/bin/python3.11",
+    "-B",
+    "-S",
+    "-c",
+    "import sys; sys.path.insert(0, '/home/runner/work/ProverStrength/ProverStrength/queue/1cbe393691fe283a0ff97ad6911b5fba1725d2d1d3cd01a81bbb226840860b02/7322b314b34bdbfc7b103dc7db513552189ca136/evaluator/src'); from prover_strength.cli import main; raise SystemExit(main())",
+    "baseline",
+    "/tmp/ppr-task-5tb1mj_b/Task.agda",
+    "--agda",
+    "/home/runner/work/_temp/agdaprover-toolchain/agda",
+    "--budget",
+    "10"
+  ],
+  "exit_code": 0,
+  "stdout": "{\"candidate\": \"{-# OPTIONS --without-K --exact-split #-}\\nmodule Task where\\n\\ngoal : {s47ff242909bfcdf7 s3c7aced33f669eb9 s11057d5c557d28dd : Set} \\u2192 (s47ff242909bfcdf7 \\u2192 s3c7aced33f669eb9 \\u2192 s11057d5c557d28dd) \\u2192 s3c7aced33f669eb9 \\u2192 s47ff242909bfcdf7 \\u2192 s11057d5c557d28dd\\ngoal = \\u03bb f y x \\u2192 f x y\\n\"}\n",
+  "stderr": "",
+  "checker_diagnostic": "Checking Task (/tmp/ppr-check-pr1w3odl/Task.agda).\n"
+}
