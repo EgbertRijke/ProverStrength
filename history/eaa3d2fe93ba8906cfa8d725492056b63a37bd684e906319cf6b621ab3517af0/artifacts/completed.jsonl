@@ -1,0 +1,32 @@
+{"artifact_sha256": "742c0ef2a1efdae22ffb3e48b7de1f8fafdd4e23a77fbbd9d1caba287e44bd26", "checker_accepted": true, "elapsed_seconds": 1.4103363179999633, "prover": "AgdaProver-nnue-deep", "seed": 0, "status": "verified", "task": "composition-0"}
+{"artifact_sha256": "1f969eb90eba177e2293719f4f4f24a197d0c2917d77a5c402ff047917083d42", "checker_accepted": true, "elapsed_seconds": 1.4163719250000213, "prover": "AgdaProver-nnue-deep", "seed": 0, "status": "verified", "task": "contraction-0"}
+{"artifact_sha256": "7dab709755307011ec8681fc67b5d746741b14cf65d931ea4ec3cd178d5b76f7", "checker_accepted": true, "elapsed_seconds": 1.9806263039999976, "prover": "AgdaProver-nnue-deep", "seed": 0, "status": "verified", "task": "vector-map-0"}
+{"checker_accepted": false, "elapsed_seconds": 0.3037015720000227, "prover": "lambda-baseline-v1", "seed": 0, "status": "unsolved", "task": "add-associativity-0"}
+{"checker_accepted": false, "elapsed_seconds": 10.005447484000001, "prover": "AgdaProver-nnue-deep", "seed": 0, "status": "timeout", "task": "add-right-succ-0"}
+{"artifact_sha256": "94d49c8d2684429e863edea8b8cc09ece8b9f84aba673dab6ad5dbd7cb93aea1", "checker_accepted": true, "elapsed_seconds": 1.4133467069999597, "prover": "AgdaProver-nnue-deep", "seed": 0, "status": "verified", "task": "exchange-0"}
+{"artifact_sha256": "260684636ede2bead6f6a586f6b0f8c7a6e0d44d51bf763b836c288f3fe25af5", "checker_accepted": true, "elapsed_seconds": 0.1773362519999182, "prover": "lambda-baseline-v1", "seed": 0, "status": "verified", "task": "identity-0"}
+{"checker_accepted": false, "elapsed_seconds": 0.2735129789999746, "prover": "lambda-baseline-v1", "seed": 0, "status": "unsolved", "task": "symmetry-0"}
+{"checker_accepted": false, "elapsed_seconds": 0.2714461730000721, "prover": "lambda-baseline-v1", "seed": 0, "status": "unsolved", "task": "congruence-0"}
+{"checker_accepted": false, "elapsed_seconds": 0.2925432050000154, "prover": "lambda-baseline-v1", "seed": 0, "status": "unsolved", "task": "sigma-map-0"}
+{"checker_accepted": false, "elapsed_seconds": 10.00521508199995, "prover": "AgdaProver-nnue-deep", "seed": 0, "status": "timeout", "task": "add-right-zero-0"}
+{"checker_accepted": false, "elapsed_seconds": 10.005705121999995, "prover": "AgdaProver-nnue-deep", "seed": 0, "status": "timeout", "task": "add-associativity-0"}
+{"artifact_sha256": "4c171c7724bd9802d77682bb90e286e94f59efa4d0f58ba09fb667e13d9181fb", "checker_accepted": true, "elapsed_seconds": 1.689368701000035, "prover": "AgdaProver-nnue-deep", "seed": 0, "status": "verified", "task": "sigma-map-0"}
+{"checker_accepted": false, "elapsed_seconds": 10.006565522000074, "prover": "AgdaProver-nnue-deep", "seed": 0, "status": "timeout", "task": "append-right-unit-0"}
+{"artifact_sha256": "17daeda1a45bd1412ee203de7c3e23c3b09cde4f7616b3de7a95c43b6f0b50da", "checker_accepted": true, "elapsed_seconds": 0.23409159199991336, "prover": "lambda-baseline-v1", "seed": 0, "status": "verified", "task": "composition-0"}
+{"checker_accepted": false, "elapsed_seconds": 0.3010681179999892, "prover": "lambda-baseline-v1", "seed": 0, "status": "unsolved", "task": "append-right-unit-0"}
+{"artifact_sha256": "e7b392416094d68b358426cbec84722a7ea86a97f39d4377e78f3257f8bf289c", "checker_accepted": true, "elapsed_seconds": 0.28289360300004773, "prover": "lambda-baseline-v1", "seed": 0, "status": "verified", "task": "exchange-0"}
+{"artifact_sha256": "ac19c3b2898c89967db40125a1724237af5e8621d9ac87e5206e5400420ddcfb", "checker_accepted": true, "elapsed_seconds": 1.526836421999974, "prover": "AgdaProver-nnue-deep", "seed": 0, "status": "verified", "task": "transport-0"}
+{"artifact_sha256": "881af2d6d06d4cb1d33412ae50026260c1f82b1fb4e9532befe56d3b633158a3", "checker_accepted": true, "elapsed_seconds": 0.33291886399990744, "prover": "lambda-baseline-v1", "seed": 0, "status": "verified", "task": "contraction-0"}
+{"checker_accepted": false, "elapsed_seconds": 0.28879286699998374, "prover": "lambda-baseline-v1", "seed": 0, "status": "unsolved", "task": "add-right-succ-0"}
+{"artifact_sha256": "ff89d8cfcfb012ad9a208eba0fa135b2c1309189836da72e64624ae691573e8c", "checker_accepted": true, "elapsed_seconds": 1.499271856000064, "prover": "AgdaProver-nnue-deep", "seed": 0, "status": "verified", "task": "symmetry-0"}
+{"checker_accepted": false, "elapsed_seconds": 0.3003536250000707, "prover": "lambda-baseline-v1", "seed": 0, "status": "unsolved", "task": "vector-append-0"}
+{"artifact_sha256": "921ed855441efb1650d64312c9b321e4f682f738f7bb497bfc2c2ef6ba7de812", "checker_accepted": true, "elapsed_seconds": 1.4876809529999946, "prover": "AgdaProver-nnue-deep", "seed": 0, "status": "verified", "task": "reflexivity-0"}
+{"checker_accepted": false, "elapsed_seconds": 0.2846854050000047, "prover": "lambda-baseline-v1", "seed": 0, "status": "unsolved", "task": "transitivity-0"}
+{"artifact_sha256": "84efe360575df7826a1d0bafed6b4285137cebc8b09638d582a2010568b9537b", "checker_accepted": true, "elapsed_seconds": 1.5610825629999, "prover": "AgdaProver-nnue-deep", "seed": 0, "status": "verified", "task": "congruence-0"}
+{"checker_accepted": false, "elapsed_seconds": 0.28669704999992973, "prover": "lambda-baseline-v1", "seed": 0, "status": "unsolved", "task": "add-right-zero-0"}
+{"checker_accepted": false, "elapsed_seconds": 0.2814712030000237, "prover": "lambda-baseline-v1", "seed": 0, "status": "unsolved", "task": "reflexivity-0"}
+{"artifact_sha256": "0d83c99e923ec138500d573355ccc18ed2aa27164a6631912b73d3b6f4e94833", "checker_accepted": true, "elapsed_seconds": 1.4344563409999864, "prover": "AgdaProver-nnue-deep", "seed": 0, "status": "verified", "task": "identity-0"}
+{"artifact_sha256": "6e05889fc9171418e91d1dc2757086ff56088f39e63e35d209e8d39e0d93dfb9", "checker_accepted": true, "elapsed_seconds": 1.54420922099996, "prover": "AgdaProver-nnue-deep", "seed": 0, "status": "verified", "task": "transitivity-0"}
+{"checker_accepted": false, "elapsed_seconds": 0.28972905699993134, "prover": "lambda-baseline-v1", "seed": 0, "status": "unsolved", "task": "vector-map-0"}
+{"checker_accepted": false, "elapsed_seconds": 10.005087896999953, "prover": "AgdaProver-nnue-deep", "seed": 0, "status": "timeout", "task": "vector-append-0"}
+{"checker_accepted": false, "elapsed_seconds": 0.2786263839999492, "prover": "lambda-baseline-v1", "seed": 0, "status": "unsolved", "task": "transport-0"}
